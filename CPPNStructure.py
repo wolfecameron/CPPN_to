@@ -94,7 +94,7 @@ class Genotype: #Genotype class contains all mutation/evolutionary method/all in
         self.nodeList.append(Node(self.size,0,"hidden"))
         self.size = self.size + 1
     
-    
+    '''
     #checks if connection creates recursion issue
     def checkConnection(self,indIn,indOut):
         for i in self.nodeList[indOut].connectingNodes:
@@ -106,15 +106,19 @@ class Genotype: #Genotype class contains all mutation/evolutionary method/all in
                 return False
     
         return True
-    
+    '''
     
     #this function should be always used to append the connectionList
     def makeConnection(self,indIn, indOut, weight): #creates a connection and checks that it does not already exist
-        if(self.checkConnection(indIn,indOut)):
-            self.connectionList.append(Connection(indIn,indOut, weight,True,self.globalInnovation))
-            self.nodeList[indOut].connectingNodes.append(indIn)
-            self.globalInnovation = self.globalInnovation + 1
-    
+		check1,check2 = (indIn in self.nodeList[indOut].connectingNodes),(indOut in self.nodeList[indIn].connectingNodes)
+		if((not check1) and (not check2)):
+			self.connectionList.append(Connection(indIn,indOut, weight,True,self.globalInnovation))
+			self.nodeList[indOut].connectingNodes.append(indIn)
+			self.globalInnovation = self.globalInnovation + 1
+		else:
+			print check1
+			print check2
+			
     
     #crosses 2 different genotypes, keeps all connections unless two connections are same
     def crossover(self, parent2):
