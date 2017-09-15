@@ -53,6 +53,9 @@ class CPPNNode: #this node structure is actually used to mathmatically evalutate
 class Genotype: #Genotype class contains all mutation/evolutionary method/all info about network structure
        
     def __init__(self,numIn): #takes argument for number of input nodes in CPPN
+	
+			#keeps track of fitness for evaluations in GA
+			self.fitness = 0 
            
             #creates properties to contain all nodes/connections/information for each genotype
             self.numIn = numIn #track number of inputs into network
@@ -81,7 +84,7 @@ class Genotype: #Genotype class contains all mutation/evolutionary method/all in
         
     
     #MUST USE THIS FUNCTION BEFORE EVALUATING CPPN IN ANY WAY
-    def inputValues(self, values):#sets the values of input nodes equal to the input list 'values'
+    def setInput(self, values):#sets the values of input nodes equal to the input list 'values'
         if(self.numIn!=len(values)):
             return "Number of inputs must match the length of provided input values"
             
@@ -151,7 +154,6 @@ class Genotype: #Genotype class contains all mutation/evolutionary method/all in
         c = self.size
         d = random.randint(self.numIn,self.size-1)
         
-        print a,b,c,d
         #adds a new empty node onto the end of the nodeList
         self.nodeList.append(Node(self.size,0,"hidden"))
         self.makeConnection(a, self.size,random.randint(-2,2))
@@ -196,6 +198,7 @@ class Genotype: #Genotype class contains all mutation/evolutionary method/all in
 #all code below this is just used for testing 
 
 x = Genotype(4)
+x.setInput([0,1,2,3])
 x.nodeMutate()
 x.nodeMutate()
 k = x.getCPPNNodes()
