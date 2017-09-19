@@ -4,8 +4,9 @@ from CPPNStructure import Genotype, CPPNNode
 
 
 
+
 #evaluates network based on its XOR performance
-def evalNetwork(Genotype x):
+def evalNetwork(g_param):
 	fitness = 0 #initializes fitness to be empty (0)
 
 	idealResults = [0,1,1,0]
@@ -13,24 +14,24 @@ def evalNetwork(Genotype x):
 	inputs = np.matrix([[0,0],[0,1],[1,0],[1,1]])
 	
 	#evaluates first set of inputs
-    x.setInput(inputs[0])
-	CPPN = x.getCPPNNodes()
+	g_param.setInput(inputs[0])
+	CPPN = g_param.getCPPNNodes()
 	results.append(CPPN.evaluateCPPN())
 	
 	#each result is appended to the result list
 	#2nd set
-	Genotype.setInput(inputs[1])
-	CPPN = Genotype.getCPPNNodes()
+	g_param.setInput(inputs[1])
+	CPPN = g_param.getCPPNNodes()
 	results.append(CPPN.evaluateCPPN())
 	
 	#3rd set
-	Genotype.setInput(inputs[2])
-	CPPN = Genotype.getCPPNNodes()
+	g_param.setInput(inputs[2])
+	CPPN = g_param.getCPPNNodes()
 	results.append(CPPN.evaluateCPPN())
 	
 	#4th set
-	Genotype.setInput(inputs[3])
-	CPPN = Genotype.getCPPNNodes()
+	g_param.setInput(inputs[3])
+	CPPN = g_param.getCPPNNodes()
 	results.append(CPPN.evaluateCPPN())
 
 	#increments the fitness based on the squared distance between results and optimal results 
@@ -38,8 +39,8 @@ def evalNetwork(Genotype x):
 		fitness = fitness + np.square((idealResults[i] - results[i]), 2)
 	
 	
-    
-    return fitness,
+	
+	return fitness,
 	
 
 #must define variables before for pointMutate	
@@ -51,7 +52,7 @@ tb = base.Toolbox()
 tb.register("CPPN", Genotype,2)
 tb.register("individual", tools.initRepeat, creator.Individual, tb.CPPN, n=1)
 tb.register("population", tools.initRepeat, list, tb.individual, n = 400)
-tb.register("evaluate", evalWeights)
+tb.register("evaluate", evalNetwork)
 tb.register("mate", Genotype.crossover)
 tb.register("pointMutate", Genotype.pointMutate,mutpb)
 tb.register("nodeMutate", Genotype.nodeMutate)
@@ -61,7 +62,7 @@ tb.register("select", tools.selTournament, tournsize = 5)
 tb.register("map", map)
 
 
-
+'''
 fits = tb.map(tb.evaluate,population)
 
 for ind,fit in zip(range(len(population)),fits):
@@ -69,4 +70,4 @@ for ind,fit in zip(range(len(population)),fits):
 	
 for g in range(ngen):
 	population = tb.select(population, k = len(population))
-
+'''
