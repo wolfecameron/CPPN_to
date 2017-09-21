@@ -118,9 +118,7 @@ class Genotype: #Genotype class contains all mutation/evolutionary method/all in
 			self.connectionList.append(Connection(indIn,indOut, weight,True,self.globalInnovation))
 			self.nodeList[indOut].connectingNodes.append(indIn)
 			self.globalInnovation = self.globalInnovation + 1
-		else:
-			print check1
-			print check2
+		
 			
     
 	#crosses 2 different genotypes, keeps all connections unless two connections are same
@@ -141,8 +139,9 @@ class Genotype: #Genotype class contains all mutation/evolutionary method/all in
 	#randomly updates the weight of a connection gene
 	def pointMutate(self, mutpb):
 		#the upper limit of this mutation value should be the mutation probability of the evolutationary algorithm
-		mutIndex = random.randint(0,self.size-1)
+		mutIndex = random.randint(0,len(self.connectionList)-1)
 		self.connectionList[mutIndex].weight = self.connectionList[mutIndex].weight + random.uniform(0,mutpb) 
+
     
     
 	#creates a new randomly connected node in the CPPN structure
@@ -171,7 +170,7 @@ class Genotype: #Genotype class contains all mutation/evolutionary method/all in
     
 	#toggles the activation status of a randomly selected connection
 	def disableMutate(self):
-		mutIndex = random.randint(0,self.size-1)
+		mutIndex = random.randint(0,len(self.connectionList)-1)
 		self.connectionList[mutIndex].activationStatus = not(self.connectionList[mutIndex].activationStatus)
     
     
@@ -196,10 +195,11 @@ class Genotype: #Genotype class contains all mutation/evolutionary method/all in
                 
    
 #all code below this is just used for testing 
-
+'''
 x = Genotype(4)
 x.setInput([0,1,2,3])
 x.nodeMutate()
 x.nodeMutate()
 k = x.getCPPNNodes()
 print k.evaluateCPPN()
+'''
