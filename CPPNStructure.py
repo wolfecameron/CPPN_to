@@ -131,13 +131,12 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 		child = Genotype(self.numIn)
 		childSize = self.size if (self.size >= parent2.size) else parent2.size
 
-		for i in range(0, childSize - (
-			self.numIn + 2)):  # makes child the maximum size of both parents (so all connections work properly)
+		for i in range(0, childSize - self.numIn + 2):  # makes child the maximum size of both parents (so all connections work properly)
 			child.makeNode()
 
 		for i, z in zip(self.connectionList, parent2.connectionList):
 			child.makeConnection(i.nodeIn, i.nodeOut, i.weight)
-			child.makeConnection(z.nodeIn, z.nodeOut, z.weight)
+			child.makeConnection(z.nodeIn, z.nodeOut, z.weight)#crosses connections, keeps all connections
 
 		return child
 

@@ -1,7 +1,7 @@
 from deap import algorithms, base, creator, tools
 import numpy as np
 from CPPNStructure import Genotype, CPPN
-from DEAP_alg import var_algo
+from DEAP_alg import var_algo, select
 import math
 
 
@@ -39,18 +39,19 @@ def evalNetwork(g_param):
 
 	#increments the fitness based on the squared distance between results and optimal results 
 	for i in range(0,len(idealResults)):
-		fitness = fitness + math.pow((idealResults[i] - results[i]),2) #squared to keep values positive
+		fitness = fitness + math.fabs(idealResults[i] - results[i])*10 #keeps values positive
 	
 	
-	
+	print fitness
 	return fitness,
 	
 
 NUM_INPUTS = 2
-POP_SIZE = 100
+POP_SIZE = 50
+T_SIZE = 5 #size of each tournament
 
 #must define variables before for pointMutate	
-cxpb , mutpb, ngen = .05, .05, 100
+cxpb , mutpb, ngen = .05, .05, 400
 	
 creator.create("FitnessMin", base.Fitness, weights = (-1.0,))
 creator.create("Individual", list, fitness = creator.FitnessMin)
@@ -69,16 +70,18 @@ for i in range(POP_SIZE):
 fits = tb.map(tb.evaluate, pop) #runs evaluation on all members of population, gets fitness values in a list fits[]
 
 for ind,fit in zip(pop,fits): #assigns fitness value to each ind in pop[]
+	print fit
 	ind.fitness = fit 
 
 for g in range(ngen): 
-	pop = tb.select(pop, k = len(pop))
+	pop = select(pop,len(pop), T_SIZE)
 	pop = var_algo(pop, tb, cxpb, mutpb) #runs the evolutionary algorithm, returns offspring
 	
 	fits = tb.map(tb.evaluate, pop) #runs evaluation on all members of population, gets fitness values in a list fits[]
 
 	for ind,fit in zip(pop,fits): #assigns fitness value to each ind in pop[]
 		ind.fitness = fit 
+		#print ind.fitness
 	
 	
 
@@ -87,6 +90,13 @@ result1 = pop[0]
 result1.inputValues([0,0])
 CPPN1 = result1.getCPPNNodes()
 print CPPN1.evaluateCPPN()
+
+'''
+result5 = pop[10]
+result5.inputValues([0,0])
+CPPN5 = result1.getCPPNNodes()
+print CPPN5.evaluateCPPN()
+'''
 
 result2 = pop[0]
 result2.inputValues([0,1])
