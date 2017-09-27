@@ -1,6 +1,6 @@
 from deap import algorithms, base, creator, tools
 import numpy as np
-from CPPNStructure import Genotype, CPPNNode
+from CPPNStructure import Genotype, CPPN
 from DEAP_alg import var_algo
 import math
 
@@ -17,23 +17,23 @@ def evalNetwork(g_param):
 	inputs = np.matrix([[0,0],[0,1],[1,0],[1,1]])
 	
 	#evaluates first set of inputs
-	g_param.setInput(inputs[0])
+	g_param.inputValues(inputs[0])
 	CPPN = g_param.getCPPNNodes()
 	results.append(CPPN.evaluateCPPN())
 	
 	#each result is appended to the result list
 	#2nd set
-	g_param.setInput(inputs[1])
+	g_param.inputValues(inputs[1])
 	CPPN = g_param.getCPPNNodes()
 	results.append(CPPN.evaluateCPPN())
 	
 	#3rd set
-	g_param.setInput(inputs[2])
+	g_param.inputValues(inputs[2])
 	CPPN = g_param.getCPPNNodes()
 	results.append(CPPN.evaluateCPPN())
 	
 	#4th set
-	g_param.setInput(inputs[3])
+	g_param.inputValues(inputs[3])
 	CPPN = g_param.getCPPNNodes()
 	results.append(CPPN.evaluateCPPN())
 
@@ -47,10 +47,10 @@ def evalNetwork(g_param):
 	
 
 NUM_INPUTS = 2
-POP_SIZE = 15
+POP_SIZE = 30
 
 #must define variables before for pointMutate	
-cxpb , mutpb, ngen = .05, .05, 5
+cxpb , mutpb, ngen = .05, .05, 100
 	
 creator.create("FitnessMin", base.Fitness, weights = (-1.0,))
 creator.create("Individual", list, fitness = creator.FitnessMin)
@@ -58,13 +58,7 @@ tb = base.Toolbox()
 tb.register("individual", tools.initRepeat, creator.Individual, Genotype, NUM_INPUTS, n=1)
 tb.register("population", tools.initRepeat, list, tb.individual, n = POP_SIZE)
 tb.register("evaluate", evalNetwork)
-'''
-tb.register("mate", Genotype.crossover)
-tb.register("pointMutate", Genotype.pointMutate,mutpb)
-tb.register("nodeMutate", Genotype.nodeMutate)
-tb.register("linkMutate", Genotype.linkMutate)
-tb.register("disableMutate", Genotype.disableMutate)
-'''
+
 tb.register("select", tools.selTournament, tournsize = 5)
 tb.register("map", map)
 
@@ -89,9 +83,18 @@ for g in range(ngen):
 	
 
 result = pop[0]
-result.setInput([0,0])
-CPPN = result.getCPPNNodes()
-print CPPN.evaluateCPPN()
+result.inputValues([0,0])
+CPPN1 = result.getCPPNNodes()
+print CPPN1.evaluateCPPN()
+result.inputValues([0,1])
+CPPN2 = result.getCPPNNodes()
+print CPPN2.evaluateCPPN()
+result.inputValues([1,0])
+CPPN3 = result.getCPPNNodes()
+print CPPN3.evaluateCPPN()
+result.inputValues([1,1])
+CPPN4 = result.getCPPNNodes()
+print CPPN4.evaluateCPPN()
 
 '''
 fits = tb.map(tb.evaluate,population)
