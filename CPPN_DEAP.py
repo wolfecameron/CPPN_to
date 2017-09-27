@@ -24,18 +24,18 @@ def evalNetwork(g_param):
 	#each result is appended to the result list
 	#2nd set
 	g_param.inputValues(inputs[1])
-	CPPN = g_param.getCPPNNodes()
-	results.append(CPPN.evaluateCPPN())
+	CPPN2 = g_param.getCPPNNodes()
+	results.append(CPPN2.evaluateCPPN())
 	
 	#3rd set
 	g_param.inputValues(inputs[2])
-	CPPN = g_param.getCPPNNodes()
-	results.append(CPPN.evaluateCPPN())
+	CPPN3 = g_param.getCPPNNodes()
+	results.append(CPPN3.evaluateCPPN())
 	
 	#4th set
 	g_param.inputValues(inputs[3])
-	CPPN = g_param.getCPPNNodes()
-	results.append(CPPN.evaluateCPPN())
+	CPPN4 = g_param.getCPPNNodes()
+	results.append(CPPN4.evaluateCPPN())
 
 	#increments the fitness based on the squared distance between results and optimal results 
 	for i in range(0,len(idealResults)):
@@ -47,7 +47,7 @@ def evalNetwork(g_param):
 	
 
 NUM_INPUTS = 2
-POP_SIZE = 30
+POP_SIZE = 100
 
 #must define variables before for pointMutate	
 cxpb , mutpb, ngen = .05, .05, 100
@@ -82,18 +82,25 @@ for g in range(ngen):
 	
 	
 
-result = pop[0]
-result.inputValues([0,0])
-CPPN1 = result.getCPPNNodes()
+#test all possible inputs
+result1 = pop[0]
+result1.inputValues([0,0])
+CPPN1 = result1.getCPPNNodes()
 print CPPN1.evaluateCPPN()
-result.inputValues([0,1])
-CPPN2 = result.getCPPNNodes()
+
+result2 = pop[0]
+result2.inputValues([0,1])
+CPPN2 = result2.getCPPNNodes()
 print CPPN2.evaluateCPPN()
-result.inputValues([1,0])
-CPPN3 = result.getCPPNNodes()
+
+result3 = pop[0]
+result3.inputValues([1,0])
+CPPN3 = result3.getCPPNNodes()
 print CPPN3.evaluateCPPN()
-result.inputValues([1,1])
-CPPN4 = result.getCPPNNodes()
+
+result4 = pop[0]
+result4.inputValues([1,1])
+CPPN4 = result4.getCPPNNodes()
 print CPPN4.evaluateCPPN()
 
 '''

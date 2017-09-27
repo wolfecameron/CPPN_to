@@ -54,146 +54,153 @@ class CPPN:  # this node structure is actually used to mathmatically evalutate t
 
 class Genotype:  # Genotype class contains all mutation/evolutionary method/all info about network structure
 
-    def __init__(self, numIn):  # takes argument for number of input nodes in CPPN
+	def __init__(self, numIn):  # takes argument for number of input nodes in CPPN
 
-        # creates properties to contain all nodes/connections/information for each genotype
-        self.numIn = numIn  # track number of inputs into network
-        self.outputIndex = numIn + 1;  # stores index of output node
-        self.globalInnovation = 0
-        self.nodeList = []  # stores all nodes in a single list
-        self.connectionList = []  # stores information for all conections within the neural network
-        self.size = numIn + 2  # stores number of total nodes in the network
+		# creates properties to contain all nodes/connections/information for each genotype
+		self.numIn = numIn  # track number of inputs into network
+		self.outputIndex = numIn + 1;  # stores index of output node
+		self.globalInnovation = 0
+		self.nodeList = []  # stores all nodes in a single list
+		self.connectionList = []  # stores information for all conections within the neural network
+		self.size = numIn + 2  # stores number of total nodes in the network
 
-        # node creation Loop
-        for i in range(0, numIn):
-            # nodes initialized with value of zero, values created later
-            self.nodeList.append(Node(i, 0, "input"))  # creates input nodes (number of inputs is parameterized)
+		# node creation Loop
+		for i in range(0, numIn):
+			# nodes initialized with value of zero, values created later
+			self.nodeList.append(Node(i, 0, "input"))  # creates input nodes (number of inputs is parameterized)
 
-        self.nodeList.append(Node(numIn, 0, "hidden"))  # networks start with a single hidden node and output node to maximize simplicity
-        self.nodeList.append(Node(numIn + 1, 0, "output"))  # creates output node
+		self.nodeList.append(Node(numIn, 0, "hidden"))  # networks start with a single hidden node and output node to maximize simplicity
+		self.nodeList.append(Node(numIn + 1, 0, "output"))  # creates output node
 
-        # connectionList creation loop
-        for i in range(0, numIn):
-            # creates connections between the inputs and hidden node
+		# connectionList creation loop
+		for i in range(0, numIn):
+			# creates connections between the inputs and hidden node
 			self.connectionList.append(Connection(i, self.numIn, random.randint(-2,2), True, self.globalInnovation))
 			self.nodeList[self.numIn].connectingNodes.append(i)
 			
-            #self.makeConnection(i, numIn, random.randint(-2, 2))
+			#self.makeConnection(i, numIn, random.randint(-2, 2))
 
-        # creates final connection to output
+		# creates final connection to output
 		self.connectionList.append(Connection(self.numIn, self.numIn+1, random.randint(-2,2), True, self.globalInnovation))
 		self.nodeList[self.numIn+1].connectingNodes.append(self.numIn)
-        #self.makeConnection(numIn, numIn + 1, random.randint(-2, 2))
+		#self.makeConnection(numIn, numIn + 1, random.randint(-2, 2))
+	
+	#def __str__(self):
+		
+	
+	# MUST USE THIS FUNCTION BEFORE EVALUATING CPPN IN ANY WAY
+	def inputValues(self, values):  # sets the values of input nodes equal to the input list 'values'
+		if (self.numIn != len(values)):
+			return "Number of inputs must match the length of provided input values"
 
-    # MUST USE THIS FUNCTION BEFORE EVALUATING CPPN IN ANY WAY
-    def inputValues(self, values):  # sets the values of input nodes equal to the input list 'values'
-        if (self.numIn != len(values)):
-            return "Number of inputs must match the length of provided input values"
-
-        for i in range(0, self.numIn):
-            self.nodeList[i].nodeValue = values[i]
+		for i in range(0, self.numIn):
+			self.nodeList[i].nodeValue = values[i]
 
     # adds a new node at the end of the nodeList and increments global size of the network
-    def makeNode(self):
-        self.nodeList.append(Node(self.size, 0, "hidden"))
-        self.size = self.size + 1
+	def makeNode(self):
+		self.nodeList.append(Node(self.size, 0, "hidden"))
+		self.size = self.size + 1
 
-    def validConnection(self, indIn, indOut):
+	def validConnection(self, indIn, indOut):
+		if(indIn == indOut):
+			return False
 		if(indIn == self.outputIndex):
 			return False
 		if(indOut < self.numIn):
 			return False
 			
 		for node in self.nodeList[(indIn)].connectingNodes:
-			if node == (indOut):
+			if(node == indOut):
 				return False
 			if (not (self.validConnection(node, indOut))):
 				return False
+		
 		return True
 
-    # this function should be always used to append the connectionList
-    def makeConnection(self, indIn, indOut, weight):  # creates a connection and checks that it does not already exist
+	# this function should be always used to append the connectionList
+	def makeConnection(self, indIn, indOut, weight):  # creates a connection and checks that it does not already exist
 		
 		if(self.validConnection(indIn, indOut) and self.validConnection(indOut,indIn)):
 			self.connectionList.append(Connection(indIn, indOut, weight, True, self.globalInnovation))
 			self.nodeList[indOut].connectingNodes.append(indIn)
 			self.globalInnovation = self.globalInnovation + 1
-			print len(self.connectionList)
+			#print len(self.connectionList)
 
-    # crosses 2 different genotypes, keeps all connections unless two connections are same
-    def crossover(self, parent2):
-        child = Genotype(self.numIn)
-        childSize = self.size if (self.size >= parent2.size) else parent2.size
+	# crosses 2 different genotypes, keeps all connections unless two connections are same
+	def crossover(self, parent2):
+		child = Genotype(self.numIn)
+		childSize = self.size if (self.size >= parent2.size) else parent2.size
 
-        for i in range(0, childSize - (
-            self.numIn + 2)):  # makes child the maximum size of both parents (so all connections work properly)
-            child.makeNode()
+		for i in range(0, childSize - (
+			self.numIn + 2)):  # makes child the maximum size of both parents (so all connections work properly)
+			child.makeNode()
 
-        for i, z in zip(self.connectionList, parent2.connectionList):
-            child.makeConnection(i.nodeIn, i.nodeOut, i.weight)
-            child.makeConnection(z.nodeIn, z.nodeOut, z.weight)
+		for i, z in zip(self.connectionList, parent2.connectionList):
+			child.makeConnection(i.nodeIn, i.nodeOut, i.weight)
+			child.makeConnection(z.nodeIn, z.nodeOut, z.weight)
 
-        return child
+		return child
 
-    # randomly updates the weight of a connection gene
-    def pointMutate(self, mutpb):
-        # the upper limit of this mutation value should be the mutation probability of the evolutationary algorithm
+	# randomly updates the weight of a connection gene
+	def pointMutate(self, mutpb):
+		# the upper limit of this mutation value should be the mutation probability of the evolutationary algorithm
 		#print(len(self.connectionList))
 		mutIndex = random.randint(0, len(self.connectionList)-1)
 		self.connectionList[mutIndex].weight = self.connectionList[mutIndex].weight + random.uniform(0, mutpb)
 
 
-        # creates a new randomly connected node in the CPPN structure
+	
+	# creates a new randomly connected node in the CPPN structure
+	def nodeMutate(self):
+		a = random.randint(0, self.size - 1)
+		while (a == self.outputIndex):
+			a = random.randint(0, self.size - 1)
+		b = self.size
+		c = self.size
+		d = random.randint(self.numIn, self.size - 1)
+		
+		# adds a new empty node onto the end of the nodeList
+		self.nodeList.append(Node(self.size, 0, "hidden"))
+		self.makeConnection(a, self.size, random.randint(-2, 2))
+		self.makeConnection(self.size, d, random.randint(-2, 2))
+		self.size = self.size + 1  # increments size of structure
 
-    def nodeMutate(self):
-        a = random.randint(0, self.size - 1)
-        while (a == self.outputIndex):
-            a = random.randint(0, self.size - 1)
-        b = self.size
-        c = self.size
-        d = random.randint(self.numIn, self.size - 1)
+	# randomly adds a connection into the network
+	def linkMutate(self):  # mutIn and mutOut should be randomly selected integers within range of nodeList
+		self.makeConnection(random.randint(0, self.size - 1), random.randint(self.numIn, self.size - 1),
+							random.randint(-2, 2))
 
-        #print a, b, c, d
-        # adds a new empty node onto the end of the nodeList
-        self.nodeList.append(Node(self.size, 0, "hidden"))
-        self.makeConnection(a, self.size, random.randint(-2, 2))
-        self.makeConnection(self.size, d, random.randint(-2, 2))
-        self.size = self.size + 1  # increments size of structure
-
-    # randomly adds a connection into the network
-    def linkMutate(self):  # mutIn and mutOut should be randomly selected integers within range of nodeList
-        self.makeConnection(random.randint(0, self.size - 1), random.randint(self.numIn, self.size - 1),
-                            random.randint(-2, 2))
-
-    # toggles the activation status of a randomly selected connection
-    def disableMutate(self):
+	# toggles the activation status of a randomly selected connection
+	def disableMutate(self):
 		#print(len(self.connectionList))
 		mutIndex = random.randint(0, len(self.connectionList)-1)
 		self.connectionList[mutIndex].activationStatus = (not (self.connectionList[mutIndex].activationStatus))
 
-    # creates a list of CPPN nodes to perform activation upon, must call this function on a genotype to evaluate the CPPN
-    def getCPPNNodes(self):
-        CPPNList = []
-        for i in range(0, self.size):
-            CPPNList.append(CPPN())
-            CPPNList[i].value = 0
+	# creates a list of CPPN nodes to perform activation upon, must call this function on a genotype to evaluate the CPPN
+	def getCPPNNodes(self):
+		CPPNList = []
+		for i in range(0, self.size):
+			CPPNList.append(CPPN())
+			CPPNList[i].value = self.nodeList[i].nodeValue
 
-        # starts all connection and weight lists as regular python lists
-        for x in self.connectionList:
-            indIn = x.nodeIn
-            indOut = x.nodeOut
-            CPPNList[indOut].connections.append(self.nodeList[indIn].nodeValue)
-            CPPNList[indOut].CPPNConnections.append(CPPNList[indIn])
-            CPPNList[indOut].weights.append(x.weight)
+		# starts all connection and weight lists as regular python lists
+		for x in self.connectionList:
+			indIn = x.nodeIn
+			indOut = x.nodeOut
+			CPPNList[indOut].connections.append(self.nodeList[indIn].nodeValue)
+			CPPNList[indOut].CPPNConnections.append(CPPNList[indIn])
+			CPPNList[indOut].weights.append(x.weight)
 
-        return CPPNList[self.outputIndex]  # returns the output node of CPPN
+		return CPPNList[self.outputIndex]  # returns the output node of CPPN
 
 
 # all code below this is just used for testing
-
+'''
 x = Genotype(4)
 x.makeConnection(5, 1, 5)
 x.nodeMutate()
 x.nodeMutate()
 k = x.getCPPNNodes()
 #print (k.evaluateCPPN())
+
+'''
