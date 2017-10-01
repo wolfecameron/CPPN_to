@@ -1,6 +1,7 @@
 import random
 from CPPNStructure import Genotype
 
+
 #this function is the varAnd DEAP function adapted to fit the needs of our structure
 def var_algo(population, toolbox, cxpb, mutpb):
 	
@@ -11,17 +12,22 @@ def var_algo(population, toolbox, cxpb, mutpb):
 
 		r = random.random()
 		if r < (mutpb/2):
-			random.choice([offspring[i].pointMutate(mutpb), offspring[i].nodeMutate()])
+			offspring[i].pointMutate(mutpb)
+			offspring[i].nodeMutate()
 			offspring[i].fitness = 0
+			offspring[i].generations = 0
 		
 		elif r > (mutpb/2) and r < mutpb:
 			random.choice([offspring[i].linkMutate(), offspring[i].disableMutate()])
 			offspring[i].fitness = 0
+			offspring[i].generations = 0
 	
 	for i in range(1,len(offspring)):
 		x = random.random()
 		if(x<cxpb):
 			offspring[i] = offspring[i].crossover(offspring[i-1])
+			offspring[i].fitness = 0
+			offspring[i].generations = 0
 	
 	return offspring
 
@@ -36,8 +42,6 @@ def findFittest(tourn):
 		if(tourn[i].fitness < fittest.fitness):
 			fittest = tourn[i]
 	
-	#print fittest.fitness
-	#print("~")
 	return fittest
 	
 def select(population, numReturn, tournSize): #inputs: population list, number of individuals to return, number of individuals in each tournament
@@ -54,7 +58,8 @@ def select(population, numReturn, tournSize): #inputs: population list, number o
 		chosen.append(findFittest(competitors))
 		
 	return chosen	
-
+	
+'''
 #tests the select function	
 population = []	
 for i in range(100):
@@ -68,7 +73,7 @@ for i in population:
 	print i.fitness
 	
 print len(population)
-'''
+
 tests the findFittest Function		
 x = Genotype(4)
 x.fitness = 10
