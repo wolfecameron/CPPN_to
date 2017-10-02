@@ -3,32 +3,32 @@ from CPPNStructure import Genotype
 
 
 #this function is the varAnd DEAP function adapted to fit the needs of our structure
-def var_algo(population, toolbox, cxpb, mutpb):
+def var_algo(population,cxpb, mutpb):
 	
 	#creates copy of population to vary
-	offspring = [toolbox.clone(ind) for ind in population]
+	offspring = [ind for ind in population]
 
 	for i in range(len(offspring)):
 
 		r = random.random()
 		if r < (mutpb/2):
-			offspring[i].pointMutate(mutpb)
-			offspring[i].nodeMutate()
+			random.choice([offspring[i].pointMutate(mutpb),offspring[i].nodeMutate()])
 			offspring[i].fitness = 0
-			offspring[i].generations = 0
+		
 		
 		elif r > (mutpb/2) and r < mutpb:
 			random.choice([offspring[i].linkMutate(), offspring[i].disableMutate()])
 			offspring[i].fitness = 0
-			offspring[i].generations = 0
+		
 	
 	for i in range(1,len(offspring)):
 		x = random.random()
 		if(x<cxpb):
 			offspring[i] = offspring[i].crossover(offspring[i-1])
 			offspring[i].fitness = 0
-			offspring[i].generations = 0
+			
 	
+	#print ("Var worked")
 	return offspring
 
 def selRand(individuals, k):
@@ -45,7 +45,6 @@ def findFittest(tourn):
 	return fittest
 	
 def select(population, numReturn, tournSize): #inputs: population list, number of individuals to return, number of individuals in each tournament
-
 	chosen = [] #holds list of selected individuals
 	for i in range(numReturn):
 		competitors = selRand(population, tournSize)
