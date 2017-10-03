@@ -1,5 +1,5 @@
 import random
-import CPPNActivationFunctions as Funcs
+from CPPNActivationFunctions import simpleAct
 import numpy as np
 
 

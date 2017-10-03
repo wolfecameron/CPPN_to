@@ -12,31 +12,31 @@ import math
 def evalNetwork(g_param):
 	fitness = 0 #initializes fitness to be empty (0)
 
-	idealResults = [0,1,1,0]
+	idealResults = [0,1,1,1]
 	results = []
 
 	
 	#evaluates first set of inputs
-	g_param.inputValues([0,0])
+	g_param.inputValues([0,0,1])
 	CPPN = g_param.getCPPNNodes()
 	result1 = float(CPPN.evaluateCPPN())
-	results.append((result1))
+	results.append(result1)
 	
 	#each result is appended to the result list
 	#2nd set
-	g_param.inputValues([0,1])
+	g_param.inputValues([0,1,1])
 	CPPN2 = g_param.getCPPNNodes()
 	result2 = float(CPPN2.evaluateCPPN())
-	results.append((result2))
+	results.append(result2)
 	
 	#3rd set
-	g_param.inputValues([1,0])
+	g_param.inputValues([1,0,1])
 	CPPN3 = g_param.getCPPNNodes()
 	result3 = float(CPPN3.evaluateCPPN())
 	results.append((result3))
 	
 	#4th set
-	g_param.inputValues([1,1])
+	g_param.inputValues([1,1,1])
 	CPPN4 = g_param.getCPPNNodes()
 	result4 = float(CPPN4.evaluateCPPN())
 	results.append((result4))
@@ -48,7 +48,7 @@ def evalNetwork(g_param):
 	return fitness,
 	
 
-NUM_INPUTS = 2
+NUM_INPUTS = 3
 POP_SIZE = 50
 T_SIZE = 3 #size of each tournament
 
@@ -106,26 +106,26 @@ for g in range(ngen):
 	
 
 #test all possible inputs
-result1 = pop[finalMax]
-result1.inputValues([0,0])
+result1 = pop[0]
+result1.inputValues([0,0,1])
 CPPN1 = result1.getCPPNNodes()
-print simpleAct(CPPN1.evaluateCPPN())
+print CPPN1.evaluateCPPN()
 
 
 result2 = pop[finalMax]
-result2.inputValues([0,1])
+result2.inputValues([0,1,1])
 CPPN2 = result2.getCPPNNodes()
-print simpleAct(CPPN2.evaluateCPPN())
+print (CPPN2.evaluateCPPN())
 
 result3 = pop[finalMax]
-result3.inputValues([1,0])
+result3.inputValues([1,0,1])
 CPPN3 = result3.getCPPNNodes()
-print simpleAct(CPPN3.evaluateCPPN())
+print (CPPN3.evaluateCPPN())
 
 result4 = pop[finalMax]
-result4.inputValues([1,1])
+result4.inputValues([1,1,1])
 CPPN4 = result4.getCPPNNodes()
-print simpleAct(CPPN4.evaluateCPPN())
+print (CPPN4.evaluateCPPN())
 
 '''
 fits = tb.map(tb.evaluate,population)
