@@ -27,7 +27,11 @@ def main(nelx,nely,volfrac,penal,rmin,ft, x):
 	# Allocate design variables (as array), initialize and allocate sens.
 	#THIS IS WHERE X FROM CPPN WILL BE PASSED IN!!
 	#This script initializes x's to all ones, ours will initialize with CPPN output
+	'''
+	X WILL BE INPUT INSTEAD OF BEING INITIALIZED WITH ALL 1S
 	x=volfrac * np.ones(nely*nelx,dtype=float)
+	'''
+	
 	
 	xold=x.copy()
 	xPhys=x.copy()
@@ -46,7 +50,7 @@ def main(nelx,nely,volfrac,penal,rmin,ft, x):
 	iK = np.kron(edofMat,np.ones((8,1))).flatten()
 	jK = np.kron(edofMat,np.ones((1,8))).flatten()    
 	# Filter: Build (and assemble) the index+data vectors for the coo matrix format
-	nfilter=nelx*nely*((2*(np.ceil(rmin)-1)+1)**2)
+	nfilter=int(nelx*nely*((2*(np.ceil(rmin)-1)+1)**2)) #had to cast as int type because was crashing
 	iH = np.zeros(nfilter)
 	jH = np.zeros(nfilter)
 	sH = np.zeros(nfilter)
@@ -115,7 +119,11 @@ def main(nelx,nely,volfrac,penal,rmin,ft, x):
 	u[free,0]=spsolve(K,f[free,0])    
 	# Objective and sensitivity
 	ce[:] = (np.dot(u[edofMat].reshape(nelx*nely,8),KE) * u[edofMat].reshape(nelx*nely,8) ).sum(1)
+	
+	#this is the compliance?
 	obj=( (Emin+xPhys**penal*(Emax-Emin))*ce ).sum()
+	
+	
 	dc[:]=(-penal*xPhys**(penal-1)*(Emax-Emin))*ce
 	dv[:] = np.ones(nely*nelx)
 	# Sensitivity filtering:
@@ -124,7 +132,12 @@ def main(nelx,nely,volfrac,penal,rmin,ft, x):
 	elif ft==1:
 		dc[:] = np.asarray(H*(dc[np.newaxis].T/Hs))[:,0]
 		dv[:] = np.asarray(H*(dv[np.newaxis].T/Hs))[:,0]
+		
 	
+	return obj
+	
+	'''
+	DO NOT NEED OPTIMALITY CRITERIA BECAUSE NOT OPTIMIZING IN TOPOPT FILE
 	# Optimality criteria
 	xold[:]=x
 	(x[:],g)=oc(nelx,nely,x,volfrac,dc,dv,g)
@@ -136,6 +149,7 @@ def main(nelx,nely,volfrac,penal,rmin,ft, x):
 		xPhys[:]=np.asarray(H*x[np.newaxis].T/Hs)[:,0]
 	# Compute the change by the inf. norm
 	change=np.linalg.norm(x.reshape(nelx*nely,1)-xold.reshape(nelx*nely,1),np.inf)
+	'''
 	
 	'''
 	Don't need to plot for now
@@ -144,12 +158,12 @@ def main(nelx,nely,volfrac,penal,rmin,ft, x):
 	fig.canvas.draw()
 	'''
 		
-		'''
-		NOT NEEDED - ONLY ONE CALCULATION FOR EACH CALL
-		# Write iteration history to screen (req. Python 2.6 or newer)
-		print("it.: {0} , obj.: {1:.3f} Vol.: {2:.3f}, ch.: {3:.3f}".format(\
-					loop,obj,(g+volfrac*nelx*nely)/(nelx*nely),change))
-		'''
+	'''
+	NOT NEEDED - ONLY ONE CALCULATION FOR EACH CALL
+	# Write iteration history to screen (req. Python 2.6 or newer)
+	print("it.: {0} , obj.: {1:.3f} Vol.: {2:.3f}, ch.: {3:.3f}".format(\
+				loop,obj,(g+volfrac*nelx*nely)/(nelx*nely),change))
+	'''
 		
 	# Make sure the plot stays and that the shell remains	
 	#plt.show()
@@ -202,6 +216,8 @@ if __name__ == "__main__":
 	rmin=5.4
 	penal=3.0
 	ft=1 # ft==0 -> sens, ft==1 -> dens
+	x=volfrac * np.ones(nely*nelx,dtype=float) #returns matrix with all ones
+	
 	import sys
 	if len(sys.argv)>1: nelx   =int(sys.argv[1])
 	if len(sys.argv)>2: nely   =int(sys.argv[2])
@@ -209,4 +225,5 @@ if __name__ == "__main__":
 	if len(sys.argv)>4: rmin   =float(sys.argv[4])
 	if len(sys.argv)>5: penal  =float(sys.argv[5])
 	if len(sys.argv)>6: ft     =int(sys.argv[6])
-	main(nelx,nely,volfrac,penal,rmin,ft)
+	main(nelx,nely,volfrac,penal,rmin,ft, x)
+	
