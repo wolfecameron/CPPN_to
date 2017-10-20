@@ -5,7 +5,7 @@ import numpy as np
 
 class Node:  # stores the number of total nodes and the type (input,hidden,output) of each node
 	def __init__(self, nodeNumber, nodeValue, nodeLayer):
-		
+
 		self.nodeNumber = nodeNumber
 		self.nodeValue = nodeValue  # all node values are 0 until CPPN is evaluated besides the inputs, these values are
 		self.nodeLayer = nodeLayer  # input, output, or hidden
@@ -78,40 +78,40 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 			# creates connections between the inputs and output (start w/0 hidden nodes)
 			self.connectionList.append(Connection(i, self.numIn, random.uniform(-2,2), True, self.globalInnovation))
 			self.nodeList[self.numIn].connectingNodes.append(i)
-			
+
 		'''
 		# creates final connection to output
 		self.connectionList.append(Connection(self.numIn, self.numIn+1, random.randint(-2,2), True, self.globalInnovation))
 		self.nodeList[self.numIn+1].connectingNodes.append(self.numIn)
 		#self.makeConnection(numIn, numIn + 1, random.randint(-2, 2))
 		'''
-		
-		
-	#toString method for genotype: prints all information 
+
+
+	#toString method for genotype: prints all information
 	def __str__(self):
 		print "NETWORK SIZE: " + str(self.size)
-		print " " 
-		
+		print " "
+
 		print("NODE LIST:")
 		for i in self.nodeList:
 			print i.nodeLayer + " --> " + str(i.nodeNumber)
-		
-		print " " 
-		
-		
+
+		print " "
+
+
 		print "CONNECTION LIST: "
 		counter = 1
 		for x in self.connectionList:
-			print "Connection #" + str(counter) + ":" + " [" + str(x.nodeIn) + "]---(" + str(x.weight) + ")-->[" + str(x.nodeOut) + "]" 
+			print "Connection #" + str(counter) + ":" + " [" + str(x.nodeIn) + "]---(" + str(x.weight) + ")-->[" + str(x.nodeOut) + "]"
 			print "Status: " + str(x.activationStatus)
 			counter = counter + 1
-			print " " 
-		
-		
+			print " "
+
+
 		print "Number of Connections: " + str(len(self.connectionList))
-		return " " 
-	
-	
+		return " "
+
+
 	# MUST USE THIS FUNCTION BEFORE EVALUATING CPPN IN ANY WAY
 	def inputValues(self, values):  # sets the values of input nodes equal to the input list 'values'
 		if (self.numIn != len(values)):
@@ -120,33 +120,33 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 		for i in range(0, self.numIn):
 			self.nodeList[i].nodeValue = values[i]
 
-			
-			
+
+
     # adds a new node at the end of the nodeList and increments global size of the network
 	def makeNode(self):
 		self.nodeList.append(Node(self.size, 0, "hidden"))
 		self.size = self.size + 1
 
-		
-	
-	#checks if any path exists between nodes, BFS algorithm	
+
+
+	#checks if any path exists between nodes, BFS algorithm
 	def validConnection(self, indIn, indOut):
-		#checks obvious bad connections first 	
+		#checks obvious bad connections first
 		if(indIn == indOut):
 			return False
 		if(indIn == self.outputIndex):
 			return False
 		if(indOut < self.numIn):
 			return False
-		
+
 		for z in self.nodeList:
-			z.visited = False #clears all scratch variables 
-		
+			z.visited = False #clears all scratch variables
+
 		q = [] #will be used as a Queue
-		
+
 		q.append(indOut)
 		self.nodeList[indOut].visited = True
-		
+
 		while(len(q) > 0):
 			value = q[0]
 			q = q[1:] #removes top element
@@ -156,21 +156,21 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 				if(not(self.nodeList[x].visited)):
 					q.append(x) #adds to bottom of Queue
 					self.nodeList[x].visited = True
-			
-		
+
+
 		return True
 
-		
-		
+
+
 	#always use to append the connectionList
-	def makeConnection(self, indIn, indOut, weight):  #checks connection before creating 
-		
+	def makeConnection(self, indIn, indOut, weight):  #checks connection before creating
+
 		if((self.validConnection(indIn, indOut)) and (self.validConnection(indOut,indIn))):
 			self.connectionList.append(Connection(indIn, indOut, weight, True, self.globalInnovation))
 			self.nodeList[indOut].connectingNodes.append(indIn)
 			self.globalInnovation = self.globalInnovation + 1
-				
-			
+
+
 	# crosses 2 different genotypes, keeps all connections unless two connections are same
 	def crossover(self, parent2):
 		child = Genotype(self.numIn)
@@ -185,9 +185,9 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 
 		return child
 
-		
-		
-		
+
+
+
 	# randomly updates the weight of a connection gene
 	def pointMutate(self, mutpb):
 		# the upper limit of this mutation value should be the mutation probability of the evolutationary algorithm
@@ -196,32 +196,32 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 		self.connectionList[mutIndex].weight = self.connectionList[mutIndex].weight + random.uniform(-1, 1)
 
 
-	
-	
+
+
 	# creates a new randomly connected node in the CPPN structure
 	def nodeMutate(self):
 		a = random.randint(0, self.size - 1)
 		d = random.randint(self.numIn, self.size - 1)
-		
+
 		# adds a new empty node onto the end of the nodeList
 		self.nodeList.append(Node(self.size, 0, "hidden"))
-		
+
 		aTries = 0
 		while((not(self.validConnection(a,self.size))) and aTries < 10):
 			a = random.randint(0,self.size -1)
 			aTries = aTries + 1
-		
+
 		self.makeConnection(a, self.size, random.uniform(-2, 2))
-		
+
 		bTries = 0
 		while((not(self.validConnection(self.size,d))) and bTries < 10):
 			d = random.randint(self.numIn, self.size - 1)
 			bTries = bTries + 1
-		
+
 		self.makeConnection(self.size, d, random.uniform(-2, 2))
 		self.size = self.size + 1  # increments size of structure
 
-		
+
 	# randomly adds a connection into the network
 	def linkMutate(self):  # mutIn and mutOut should be randomly selected integers within range of nodeList
 		a = random.randint(0, self.size - 1)
@@ -231,10 +231,10 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 			a = random.randint(0,self.size -1)
 			b = random.randint(self.numIn, self.size - 1) #ensures that a connection is made
 			tries = tries + 1
-		
+
 		self.makeConnection(a,b,random.uniform(-2, 2))
-		
-		
+
+
 
 	# toggles the activation status of a randomly selected connection
 	def disableMutate(self):
@@ -242,7 +242,7 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 		mutIndex = random.randint(0, len(self.connectionList)-1)
 		self.connectionList[mutIndex].activationStatus = (not (self.connectionList[mutIndex].activationStatus))
 
-		
+
 	# creates a list of CPPN nodes to perform activation upon, must call this function on a genotype to evaluate the CPPN
 	def getCPPNNodes(self):
 		CPPNList = []

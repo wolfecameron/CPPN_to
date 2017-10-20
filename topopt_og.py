@@ -5,36 +5,26 @@ from scipy.sparse import coo_matrix
 from scipy.sparse.linalg import spsolve
 from matplotlib import colors
 import matplotlib.pyplot as plt
+from topopt import main as fitness
 
+xList = [] #holds x vectors
+objList = [] #holds obj values
 
 # MAIN DRIVER
-def main(nelx,nely,volfrac,penal,rmin,ft,x):
-	'''
+def main(nelx,nely,volfrac,penal,rmin,ft):
 	print("Minimum compliance problem with OC")
 	print("ndes: " + str(nelx) + " x " + str(nely))
 	print("volfrac: " + str(volfrac) + ", rmin: " + str(rmin) + ", penal: " + str(penal))
 	print("Filter method: " + ["Sensitivity based","Density based"][ft])
-	'''
-
 	# Max and min stiffness
 	Emin=1e-9
 	Emax=1.0
-
-	# dofs: (2 dof for each node, x and y)
+	# dofs:
 	ndof = 2*(nelx+1)*(nely+1)
-
-
 	# Allocate design variables (as array), initialize and allocate sens.
-	#THIS IS WHERE X FROM CPPN WILL BE PASSED IN!!
-	#This script initializes x's to all ones, ours will initialize with CPPN output
-	'''
-	X WILL BE INPUT INSTEAD OF BEING INITIALIZED WITH ALL 1S
 	x=volfrac * np.ones(nely*nelx,dtype=float)
-	'''
-
-
 	xold=x.copy()
-	#xPhys=x.copy()
+	xPhys=x.copy()
 	g=0 # must be initialized to use the NGuyen/Paulino OC approach
 	dc=np.zeros((nely,nelx), dtype=float)
 	# FE: Build the index vectors for the for coo matrix format.
@@ -50,7 +40,7 @@ def main(nelx,nely,volfrac,penal,rmin,ft,x):
 	iK = np.kron(edofMat,np.ones((8,1))).flatten()
 	jK = np.kron(edofMat,np.ones((1,8))).flatten()
 	# Filter: Build (and assemble) the index+data vectors for the coo matrix format
-	nfilter=int(nelx*nely*((2*(np.ceil(rmin)-1)+1)**2)) #had to cast as int type because was crashing
+	nfilter= int(nelx*nely*((2*(np.ceil(rmin)-1)+1)**2))
 	iH = np.zeros(nfilter)
 	jH = np.zeros(nfilter)
 	sH = np.zeros(nfilter)
@@ -70,104 +60,75 @@ def main(nelx,nely,volfrac,penal,rmin,ft,x):
 					jH[cc]=col
 					sH[cc]=np.maximum(0.0,fac)
 					cc=cc+1
-
 	# Finalize assembly and convert to csc format
 	H=coo_matrix((sH,(iH,jH)),shape=(nelx*nely,nelx*nely)).tocsc()
 	Hs=H.sum(1)
-
 	# BC's and support
 	dofs=np.arange(2*(nelx+1)*(nely+1))
 	fixed=np.union1d(dofs[0:2*(nely+1):2],np.array([2*(nelx+1)*(nely+1)-1]))
 	free=np.setdiff1d(dofs,fixed)
-
 	# Solution and RHS vectors
 	f=np.zeros((ndof,1))
 	u=np.zeros((ndof,1))
-
 	# Set load
 	f[1,0]=-1
-
-	'''
-	Do not need to plot for now
 	# Initialize plot and plot the initial design
 	plt.ion() # Ensure that redrawing is possible
 	fig,ax = plt.subplots()
 	im = ax.imshow(-xPhys.reshape((nelx,nely)).T, cmap='gray',\
 	interpolation='none',norm=colors.Normalize(vmin=-1,vmax=0))
 	fig.show()
-	'''
-
-
-	#Keep compliance calculation with no loop - ONE CALCULATION FOR EACH FUNCTION CALL
    	# Set loop counter and gradient vectors
-	#loop=0
-	'''
+	loop=0
 	change=1
-	dv = np.ones(nely*nelx) #lists of length nelx*nely
+	dv = np.ones(nely*nelx)
 	dc = np.ones(nely*nelx)
-	'''
 	ce = np.ones(nely*nelx)
-
 	#while change>0.01 and loop<2000:
-		#loop=loop+1
+	while loop < 150:
+		loop=loop+1
+		# Setup and solve FE problem
+		sK=((KE.flatten()[np.newaxis]).T*(Emin+(xPhys)**penal*(Emax-Emin))).flatten(order='F')
+		K = coo_matrix((sK,(iK,jK)),shape=(ndof,ndof)).tocsc()
+		# Remove constrained dofs from matrix
+		K = K[free,:][:,free]
+		# Solve system
+		u[free,0]=spsolve(K,f[free,0])
+		# Objective and sensitivity
+		ce[:] = (np.dot(u[edofMat].reshape(nelx*nely,8),KE) * u[edofMat].reshape(nelx*nely,8) ).sum(1)
+		#obj=(fitness(180, 60, 0.4, 5.4, 3.0, 1,xPhys))
+		obj = ( (Emin+xPhys**penal*(Emax-Emin))*ce ).sum()
+		print("My fitness is: " + str(fitness(180, 60, 0.4, 5.4, 3.0, 1,x)))
 
-	# Setup and solve FE problem
-	sK=((KE.flatten()[np.newaxis]).T*(Emin+(xPhys)**penal*(Emax-Emin))).flatten(order='F')
-	K = coo_matrix((sK,(iK,jK)),shape=(ndof,ndof)).tocsc()
-	# Remove constrained dofs from matrix
-	K = K[free,:][:,free]
-	# Solve system
-	u[free,0]=spsolve(K,f[free,0])
-	# Objective and sensitivity
-	ce[:] = (np.dot(u[edofMat].reshape(nelx*nely,8),KE) * u[edofMat].reshape(nelx*nely,8) ).sum(1)
 
-	#this is the compliance?
-	obj=((Emin+xPhys**penal*(Emax-Emin))*ce).sum()
-	return obj
-	'''
-	dc[:]=(-penal*xPhys**(penal-1)*(Emax-Emin))*ce
-	dv[:] = np.ones(nely*nelx)
-	# Sensitivity filtering:
-	if ft==0:
-		dc[:] = np.asarray((H*(x*dc))[np.newaxis].T/Hs)[:,0] / np.maximum(0.001,x)
-	elif ft==1:
-		dc[:] = np.asarray(H*(dc[np.newaxis].T/Hs))[:,0]
-		dv[:] = np.asarray(H*(dv[np.newaxis].T/Hs))[:,0]
-	DO NOT NEED OPTIMALITY CRITERIA BECAUSE NOT OPTIMIZING IN TOPOPT FILE
-	# Optimality criteria
-	xold[:]=x
-	(x[:],g)=oc(nelx,nely,x,volfrac,dc,dv,g)
-
-	# Filter design variables
-	if ft==0:
-		xPhys[:]=x
-	elif ft==1:
-		xPhys[:]=np.asarray(H*x[np.newaxis].T/Hs)[:,0]
-	# Compute the change by the inf. norm
-	change=np.linalg.norm(x.reshape(nelx*nely,1)-xold.reshape(nelx*nely,1),np.inf)
-	'''
-
-	'''
-	Don't need to plot for now
-	# Plot to screen
-	im.set_array(-xPhys.reshape((nelx,nely)).T)
-	fig.canvas.draw()
-	'''
-
-	'''
-	NOT NEEDED - ONLY ONE CALCULATION FOR EACH CALL
-	# Write iteration history to screen (req. Python 2.6 or newer)
-	print("it.: {0} , obj.: {1:.3f} Vol.: {2:.3f}, ch.: {3:.3f}".format(\
-				loop,obj,(g+volfrac*nelx*nely)/(nelx*nely),change))
-	'''
-
+		dc[:]=(-penal*xPhys**(penal-1)*(Emax-Emin))*ce
+		dv[:] = np.ones(nely*nelx)
+		# Sensitivity filtering:
+		if ft==0:
+			dc[:] = np.asarray((H*(x*dc))[np.newaxis].T/Hs)[:,0] / np.maximum(0.001,x)
+		elif ft==1:
+			dc[:] = np.asarray(H*(dc[np.newaxis].T/Hs))[:,0]
+			dv[:] = np.asarray(H*(dv[np.newaxis].T/Hs))[:,0]
+		# Optimality criteria
+		xold[:]=x
+		(x[:],g)=oc(nelx,nely,x,volfrac,dc,dv,g)
+		# Filter design variables
+		if ft==0:   xPhys[:]=x
+		elif ft==1:	xPhys[:]=np.asarray(H*x[np.newaxis].T/Hs)[:,0]
+		# Compute the change by the inf. norm
+		change=np.linalg.norm(x.reshape(nelx*nely,1)-xold.reshape(nelx*nely,1),np.inf)
+		# Plot to screen
+		im.set_array(-xPhys.reshape((nelx,nely)).T)
+		fig.canvas.draw()
+		# Write iteration history to screen (req. Python 2.6 or newer)
+		print("it.: {0} , obj.: {1:.3f} Vol.: {2:.3f}, ch.: {3:.3f}".format(\
+					loop,obj,(g+volfrac*nelx*nely)/(nelx*nely),change))
 	# Make sure the plot stays and that the shell remains
-	#plt.show()
-	#raw_input("Press any key...")
+	plt.show()
+	raw_input("Press any key...")
 
 
 #element stiffness matrix
-#NOTE: Stiffness matrix is hard coded - used as approximation
 def lk():
 	E=1
 	nu=0.3
@@ -181,10 +142,6 @@ def lk():
 	[k[6], k[3], k[4], k[1], k[2], k[7], k[0], k[5]],
 	[k[7], k[2], k[1], k[4], k[3], k[6], k[5], k[0]] ]);
 	return (KE)
-
-
-'''
-Do not need this because it is for optimization
 # Optimality criterion
 def oc(nelx,nely,x,volfrac,dc,dv,g):
 	l1=0
@@ -201,8 +158,6 @@ def oc(nelx,nely,x,volfrac,dc,dv,g):
 		else:
 			l2=lmid
 	return (xnew,gt)
-
-
 # The real main driver
 if __name__ == "__main__":
 	# Default input parameters
@@ -212,8 +167,6 @@ if __name__ == "__main__":
 	rmin=5.4
 	penal=3.0
 	ft=1 # ft==0 -> sens, ft==1 -> dens
-	x=volfrac * np.ones(nely*nelx,dtype=float) #returns matrix with all ones
-
 	import sys
 	if len(sys.argv)>1: nelx   =int(sys.argv[1])
 	if len(sys.argv)>2: nely   =int(sys.argv[2])
@@ -221,5 +174,14 @@ if __name__ == "__main__":
 	if len(sys.argv)>4: rmin   =float(sys.argv[4])
 	if len(sys.argv)>5: penal  =float(sys.argv[5])
 	if len(sys.argv)>6: ft     =int(sys.argv[6])
-	main(nelx,nely,volfrac,penal,rmin,ft, x)
-'''
+	main(nelx,nely,volfrac,penal,rmin,ft)
+
+print("COMPARISON BEGINS HERE!")
+raw_input("Press anything to begin comparison")
+print(xList)
+#tests output from generations against output from my code
+for i in range(0,len(xList)):
+	#these numbers should all be same if script works properly
+	result = (fitness(180,60, 0.4, 5.4, 3.0, 1, xList[i]))
+	print(result)
+	print(objList[i])
