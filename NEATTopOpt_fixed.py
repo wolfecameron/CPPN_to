@@ -87,9 +87,10 @@ plt.title("Population's average and best fitness")
 plt.xlabel("Generations")
 plt.ylabel("Fitness")
 plt.show()
-
-#this loop doesnt work because every evaluation needs the full
-for xi in zip(top_inputs):
-    output = winner_net.activate(xi)
-    print("input {!r}, got {!r}".format(xi, output))
 '''
+fullOutput = []
+# this loop doesnt work because every evaluation needs the full
+for xi in zip(top_inputs):
+    fullOutput.append(winner_net.activate(xi))
+
+print fullOutput
