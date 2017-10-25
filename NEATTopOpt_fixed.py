@@ -8,10 +8,16 @@ from matplotlib import colors
 import matplotlib.pyplot as plt
 
 # NEAT implementation of topological optimization
-numX = 6
-numY = 4
+numX = 60
+numY = 20
 volfrac = 0.4
-top_inputs = volfrac * np.ones(numY * numX, dtype=float)
+top_inputs = []
+
+# sets input for nn as the x,y locations of each node as a tuple
+for x in range(1, 61):
+    for y in range(1, 21):
+        top_inputs.append((x, y))
+
 
 # top_inputs for num in range(numX*numY):
 
@@ -41,14 +47,14 @@ def lk():
 
 def eval_genomes(genomes, config):
     avgFitness = 0
-    count = 0
+    counter = 0
     for genome_id, genome in genomes:
-		genome.fitness = 0
-    	net = neat.nn.FeedForwardNetwork.create(genome, config)
+        genome.fitness = 0
+        net = neat.nn.FeedForwardNetwork.create(genome, config)
 
-		x = np.array(net.activate(top_inputs)).reshape((numX, numY))
+        x = np.array(net.activate(top_inputs)).reshape((numX, numY))
 
-		nelx = numX
+        nelx = numX
     nely = numY
     rmin = 5.4
     penal = 3.0
@@ -83,7 +89,8 @@ def eval_genomes(genomes, config):
             el = ely + elx * nely
             n1 = (nely + 1) * elx + ely
             n2 = (nely + 1) * (elx + 1) + ely
-            edofMat[el, :] = np.array([2 * n1 + 2, 2 * n1 + 3, 2 * n2 + 2, 2 * n2 + 3, 2 * n2, 2 * n2 + 1, 2 * n1, 2 * n1 + 1])
+            edofMat[el, :] = np.array([2 * n1 + 2, 2 * n1 + 3, 2 * n2 + 2,
+                                       2 * n2 + 3, 2 * n2, 2 * n2 + 1, 2 * n1, 2 * n1 + 1])
     # Construct the index pointers for the coo format
     iK = np.kron(edofMat, np.ones((8, 1))).flatten()
     jK = np.kron(edofMat, np.ones((1, 8))).flatten()
@@ -175,8 +182,8 @@ def eval_genomes(genomes, config):
     genome.fitness += obj
     avgFitness += genome.fitness
 
-plt.plot(counter, avgFitness / len(genomes))
-counter += 1
+    plt.plot(counter, avgFitness / len(genomes))
+    counter += 1
 
 
 # Load configuration.

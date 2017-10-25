@@ -137,7 +137,6 @@ def main(nelx,nely,volfrac,penal,rmin,ft,x):
 	# Optimality criteria
 	xold[:]=x
 	(x[:],g)=oc(nelx,nely,x,volfrac,dc,dv,g)
-
 	# Filter design variables
 	if ft==0:
 		xPhys[:]=x
@@ -145,16 +144,10 @@ def main(nelx,nely,volfrac,penal,rmin,ft,x):
 		xPhys[:]=np.asarray(H*x[np.newaxis].T/Hs)[:,0]
 	# Compute the change by the inf. norm
 	change=np.linalg.norm(x.reshape(nelx*nely,1)-xold.reshape(nelx*nely,1),np.inf)
-	'''
-
-	'''
 	Don't need to plot for now
 	# Plot to screen
 	im.set_array(-xPhys.reshape((nelx,nely)).T)
 	fig.canvas.draw()
-	'''
-
-	'''
 	NOT NEEDED - ONLY ONE CALCULATION FOR EACH CALL
 	# Write iteration history to screen (req. Python 2.6 or newer)
 	print("it.: {0} , obj.: {1:.3f} Vol.: {2:.3f}, ch.: {3:.3f}".format(\
@@ -181,8 +174,6 @@ def lk():
 	[k[6], k[3], k[4], k[1], k[2], k[7], k[0], k[5]],
 	[k[7], k[2], k[1], k[4], k[3], k[6], k[5], k[0]] ]);
 	return (KE)
-
-
 '''
 Do not need this because it is for optimization
 # Optimality criterion
