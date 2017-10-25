@@ -11,7 +11,7 @@ no_fitness_termination = True
 # node activation options
 activation_default      = sigmoid
 activation_mutate_rate  = 0.0
-activation_options      = sigmoid, tanh, sin, gauss, log, exp
+activation_options      = sigmoid
 
 # node aggregation options
 aggregation_default     = sum
