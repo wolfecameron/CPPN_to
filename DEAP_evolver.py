@@ -5,8 +5,8 @@ from topopt import main as fitness
 import matplotlib.pyplot as plt
 from matplotlib import colors
 
-NUMX = 180
-NUMY = 60
+NUMX = 60
+NUMY = 20
 VOLFRAC = .4
 RMIN = 5.4
 PENAL = 3
@@ -16,6 +16,11 @@ TOTAL_ELEMENTS = NUMX * NUMY
 
 
 def evalWeights(individual):
+    for x in range(len(individual)):
+        if(individual[x] < 0):
+            individual[x] = 0
+        if(individual[x] > 1):
+            individual[x] = 1
 
     x = np.array(individual, copy=True)
     return (fitness(NUMX, NUMY, VOLFRAC, RMIN, PENAL, FT, x),)
@@ -42,12 +47,13 @@ pop = tb.population()
 pop = algorithms.eaSimple(pop, tb, cxpb, mutpb, ngen)
 
 winner = pop[0][0]
+'''
 for x in range(len(winner)):
     if(winner[x] < .4):
         winner[x] = 0
     else:
         winner[x] = 1
-
+'''
 print(winner)
 
 raw_input("Enter anything to plot result")
