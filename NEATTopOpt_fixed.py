@@ -34,6 +34,7 @@ def eval_genomes(genomes, config):
     volfrac = .4
     rmin = 5.4
     penal = 3.0
+    ft = 1
 
     for genome_id, genome in genomes:
         genome.fitness = 0
@@ -46,10 +47,10 @@ def eval_genomes(genomes, config):
 
         # initialized as a regular list and copied as a numpy array to resize
         x = np.array(outList, copy=True)
-        x = x.reshape((numX, numY))
+        #x = x.reshape((numX, numY))
 
         # fitness function imported from topopt.py file
-        fit = fitness(nelX, nelY, volfrac, rmin, penal, x)  # should plot with every iteration
+        fit = fitness(nelX, nelY, volfrac, rmin, penal, ft, x)  # should plot with every iteration
         print(fit)
 
         avgFitness = avgFitness + fit
@@ -93,4 +94,4 @@ fullOutput = []
 for xi in zip(top_inputs):
     fullOutput.append(winner_net.activate(xi))
 
-print fullOutput
+print(fullOutput)

@@ -32,7 +32,7 @@ def main(nelx, nely, volfrac, penal, rmin, ft, x):
 	'''
 
     xold = x.copy()
-    # xPhys=x.copy()
+    xPhys=x.copy()
     g = 0  # must be initialized to use the NGuyen/Paulino OC approach
     dc = np.zeros((nely, nelx), dtype=float)
     # FE: Build the index vectors for the for coo matrix format.
