@@ -34,6 +34,7 @@ def eval_genomes(genomes, config):
     volfrac = .4
     rmin = 5.4
     penal = 3.0
+    ft = 1
 
     for genome_id, genome in genomes:
         genome.fitness = 0
@@ -49,7 +50,7 @@ def eval_genomes(genomes, config):
         x = x.reshape((numX, numY))
 
         # fitness function imported from topopt.py file
-        fit = fitness(nelX, nelY, volfrac, rmin, penal, x)  # should plot with every iteration
+        fit = fitness(nelX, nelY, volfrac, rmin, penal, ft, x)  # should plot with every iteration
         print(fit)
 
         avgFitness = avgFitness + fit
