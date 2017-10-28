@@ -61,20 +61,25 @@ def eval_genomes(genomes, config):
     print("Average Fitness is " + str(float(avgFitness / counter)))
 
 
+print("Step 1")
 # Load configuration.
 config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                      neat.DefaultSpeciesSet, neat.DefaultStagnation,
                      'config-topOpt')
 
+print("Step 2")
 # Create the population, which is the top-level object for a NEAT run.
 p = neat.Population(config)
 
+print("Step 3")
 # Add a stdout reporter to show progress in the terminal.
 p.add_reporter(neat.StdOutReporter(False))
 
+print("Step 4")
 # Run for 100 generations.
 winner = p.run(eval_genomes, n=50)
 
+print("Step 5")
 # Display the winning genome.
 print('\nBest genome:\n{!s}'.format(winner))
 
@@ -94,4 +99,11 @@ fullOutput = []
 for xi in zip(top_inputs):
     fullOutput.append(winner_net.activate(xi))
 
-print fullOutput
+raw_input("Enter anything to plot result")
+# Initialize plot and plot the initial design
+x = np.array(fullOutput, copy=True)
+plt.ion()  # Ensure that redrawing is possible
+fig, ax = plt.subplots()
+im = ax.imshow(-x.reshape((numX, numY)).T, cmap='gray',
+               interpolation='none', norm=colors.Normalize(vmin=-1, vmax=0))
+fig.show()
