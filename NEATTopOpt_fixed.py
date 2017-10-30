@@ -6,7 +6,7 @@ from scipy.sparse import coo_matrix
 from scipy.sparse.linalg import spsolve
 from matplotlib import colors
 import matplotlib.pyplot as plt
-from topopt import main as fitness
+import topopt
 
 # NEAT implementation of topological optimization
 numX = 20
@@ -43,14 +43,14 @@ def eval_genomes(genomes, config):
         # must unzip all the elements and run the network for each
         # input in input list
         for xi in top_inputs:
-            outList.append(net.activate(xi))
+            outList.append(net.activate(xi)[0])
 
         # initialized as a regular list and copied as a numpy array to resize
         x = np.array(outList, copy=True)
         #x = x.reshape((numX, numY))
 
         # fitness function imported from topopt.py file
-        fit = fitness(nelX, nelY, volfrac, rmin, penal, ft, x)  # should plot with every iteration
+        fit = topopt.main(nelX, nelY, volfrac, rmin, penal, ft, x)  # should plot with every iteration
         print(fit)
 
         avgFitness = avgFitness + fit

@@ -87,28 +87,30 @@ def main(nelx, nely, volfrac, penal, rmin, ft, x):
     # Set load
     f[1, 0] = -1
 
+    '''
     # Initialize plot and plot the initial design
     plt.ion()  # Ensure that redrawing is possible
     fig, ax = plt.subplots()
-    im = ax.imshow(-xPhys.reshape((nelx, nely)).T, cmap='gray',
+    im = ax.imshow(-x.reshape((nelx, nely)).T, cmap='gray',
                    interpolation='none', norm=colors.Normalize(vmin=-1, vmax=0))
     fig.show()
+    '''
 
     # Keep compliance calculation with no loop - ONE CALCULATION FOR EACH FUNCTION CALL
     # Set loop counter and gradient vectors
     # loop=0
     '''
-	change=1
-	dv = np.ones(nely*nelx) #lists of length nelx*nely
-	dc = np.ones(nely*nelx)
-	'''
+    change=1
+    dv = np.ones(nely*nelx) #lists of length nelx*nely
+    dc = np.ones(nely*nelx)
+    '''
     ce = np.ones(nely * nelx)
 
     # while change>0.01 and loop<2000:
     # loop=loop+1
 
     # Setup and solve FE problem
-    sK = ((KE.flatten()[np.newaxis]).T * (Emin + (xPhys)**penal * (Emax - Emin))).flatten(order='F')
+    sK = ((KE.flatten()[np.newaxis]).T * (Emin + (x)**penal * (Emax - Emin))).flatten(order='F')
     K = coo_matrix((sK, (iK, jK)), shape=(ndof, ndof)).tocsc()
     # Remove constrained dofs from matrix
     K = K[free, :][:, free]
@@ -119,7 +121,7 @@ def main(nelx, nely, volfrac, penal, rmin, ft, x):
              * u[edofMat].reshape(nelx * nely, 8)).sum(1)
 
     # this is the compliance?
-    obj = ((Emin + xPhys**penal * (Emax - Emin)) * ce).sum()
+    obj = ((Emin + x**penal * (Emax - Emin)) * ce).sum()
     return obj
     '''
 	dc[:]=(-penal*xPhys**(penal-1)*(Emax-Emin))*ce
