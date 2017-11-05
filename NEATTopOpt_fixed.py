@@ -15,9 +15,9 @@ import topopt
 
 # NEAT implementation of topological optimization
 POPSIZE = 50
-NGEN = 150
-numX = 60
-numY = 20
+NGEN = 3
+numX = 10
+numY = 5
 volfrac = 0.4
 top_inputs = []
 
