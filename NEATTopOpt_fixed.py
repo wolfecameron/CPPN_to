@@ -8,6 +8,7 @@ import matplotlib
 matplotlib.use('TkAgg')
 from matplotlib import pyplot as plt
 from matplotlib import colors
+from scipy.special import expit
 # from matplotlib import colors
 # import matplotlib.pyplot as plt
 import topopt
@@ -15,7 +16,7 @@ import topopt
 
 # NEAT implementation of topological optimization
 POPSIZE = 50
-NGEN = 3
+NGEN = 50
 numX = 10
 numY = 5
 volfrac = 0.4
@@ -34,11 +35,41 @@ for x in range(1, numX + 1):
     for y in range(1, numY + 1):
         top_inputs.append((x - .5, y - .5))
 
-# print(top_inputs)
 top_outputs = []
 
 AVG_FITNESSES = []
 INDIVIDUALS = []
+NETS = []
+xIn = []
+yIn = []
+
+# configures inputs
+for y in range(0, numY):
+    for x in range(0, numX):
+        xIn.append(x)
+        yIn.append(y)
+
+# must normalize all inputs for CPPN to create fluid structures
+tmp = np.array(xIn, copy=True)
+# NOTE: mean/std for xIn and yIn will always be the same
+MEAN = np.mean(tmp)
+STD = np.std(tmp)
+
+
+normX = []
+normY = []
+
+
+
+# creates input lists with the normalized vectors
+for y in range(0, numY):
+    for x in range(0, numX):
+        normX.append((x - MEAN) / STD)
+        normY.append((y - MEAN) / STD)
+
+# sigmoid activation to always pass activations through
+def sigmoid_act(x):
+    return expit(x)
 
 
 def eval_genomes(genomes, config):
@@ -56,19 +87,21 @@ def eval_genomes(genomes, config):
     for genome_id, genome in genomes:
         genome.fitness = 0
         net = neat.nn.FeedForwardNetwork.create(genome, config)
+        NETS.append(genome)
         outList = []
+        materialUsed = 0
         # must unzip all the elements and run the network for each
         # input in input list
-        for xi in top_inputs:
-            x = sigmoid_act(net.activate(xi)[0])
-            if(x > .5):
-                x = 1
-            else:
-                x = 0  # always passes output through sigmoid
+        for z in range(len(xIn)):
+            # always passes output through sigmoid
+            in_tuple = (normX[z], normY[z])
+            x = sigmoid_act(net.activate(in_tuple)[0])
             outList.append(x)
 
         # initialized as a regular list and copied as a numpy array to resize
         x = np.array(outList, copy=True)
+        #calculate the amount of material used
+        materialUsed = np.sum(x)/len(x)
         INDIVIDUALS.append(x)
         # x = x.reshape((numX, numY))
 
@@ -78,7 +111,9 @@ def eval_genomes(genomes, config):
 
         avgFitness = avgFitness + fit  # keeps track of average fitness for each generation
         counter = counter + 1
-
+        #penalize the genome if it uses too much material
+        if(materialUsed > volfrac):
+            genome.fitness-= 1000000
         genome.fitness -= fit
 
     AVG_FITNESSES.append(float(avgFitness) / counter)
@@ -107,8 +142,7 @@ print('\nBest genome:\n{!s}'.format(winner))
 # Show output of the most fit genome against training data.
 print('\nOutput:')
 winner_net = neat.nn.FeedForwardNetwork.create(winner, config)
-
-
+print('\nNet Info:\n{!s}'.format(winner))
 fullOutput = []
 # this loop doesnt work because every evaluation needs the full
 for xi in top_inputs:
@@ -130,9 +164,11 @@ for i in range(NGEN * POPSIZE - POPSIZE, NGEN * POPSIZE):
     plt.ion()
     fig, ax = plt.subplots()
     x = INDIVIDUALS[i]
-    im = ax.imshow(-x.reshape((numX, numY)).T, cmap='gray',
+    im = ax.imshow(-x.reshape(numX, numY).T, cmap='gray',
                    interpolation='none', norm=colors.Normalize(vmin=-1, vmax=0))
     fig.show()
+    net =NETS[i]
+    print('\nNet Info:\n{!s}'.format(net))
     raw_input("Hit anything to view next individual")
 
 
