@@ -17,8 +17,8 @@ import topopt
 # NEAT implementation of topological optimization
 POPSIZE = 50
 NGEN = 50
-numX = 10
-numY = 5
+numX = 30
+numY = 10
 volfrac = 0.4
 top_inputs = []
 
@@ -79,7 +79,7 @@ def eval_genomes(genomes, config):
     # LIST OF VARIABLES FOR fitnes
     nelX = numX
     nelY = numY
-    volfrac = .4
+    volfrac = .5
     rmin = 5.4
     penal = 3.0
     ft = 1
@@ -89,7 +89,6 @@ def eval_genomes(genomes, config):
         net = neat.nn.FeedForwardNetwork.create(genome, config)
         NETS.append(genome)
         outList = []
-        materialUsed = 0
         # must unzip all the elements and run the network for each
         # input in input list
         for z in range(len(xIn)):
@@ -101,20 +100,27 @@ def eval_genomes(genomes, config):
         # initialized as a regular list and copied as a numpy array to resize
         x = np.array(outList, copy=True)
         #calculate the amount of material used
-        materialUsed = np.sum(x)/len(x)
+        real_volfrac = np.sum(x)/len(x)
         INDIVIDUALS.append(x)
         # x = x.reshape((numX, numY))
-
         # fitness function imported from topopt.py file
         fit = topopt.main(nelX, nelY, volfrac, rmin, penal, ft,
                           x)
 
         avgFitness = avgFitness + fit  # keeps track of average fitness for each generation
         counter = counter + 1
-        #penalize the genome if it uses too much material
-        if(materialUsed > volfrac):
-            genome.fitness-= 1000000
-        genome.fitness -= fit
+        #penalize the genome if it uses too much material or too little material
+        #penalty is scaled based on how for away it is from desired volfrac
+        if(real_volfrac > volfrac):
+            penalty = real_volfrac - volfrac
+            genome.fitness += (1+penalty)*fit
+        elif(real_volfrac < .2):
+            penalty = np.fabs(real_volfrac - volfrac)
+            genome.fitness += (1+penalty)*fit
+        else:
+            genome.fitness += fit
+
+            
 
     AVG_FITNESSES.append(float(avgFitness) / counter)
 
@@ -160,16 +166,22 @@ fig.show()
 
 raw_input("Begin viewing final generation")
 
+
+#check variable used to stop viewing final generation
+#often don't want to look at every individual because there are so many
+check = 'a' 
+
 for i in range(NGEN * POPSIZE - POPSIZE, NGEN * POPSIZE):
-    plt.ion()
-    fig, ax = plt.subplots()
-    x = INDIVIDUALS[i]
-    im = ax.imshow(-x.reshape(numX, numY).T, cmap='gray',
+    if(not(check == 'z')):
+        plt.ion()
+        fig, ax = plt.subplots()
+        x = INDIVIDUALS[i]
+        im = ax.imshow(-x.reshape(numX, numY).T, cmap='gray',
                    interpolation='none', norm=colors.Normalize(vmin=-1, vmax=0))
-    fig.show()
-    net =NETS[i]
-    print('\nNet Info:\n{!s}'.format(net))
-    raw_input("Hit anything to view next individual")
+        fig.show()
+        net =NETS[i]
+        print('\nNet Info:\n{!s}'.format(net))
+        check = raw_input("Hit anything to view next individual. Enter 'z' to stop viewing.")
 
 
 raw_input("Enter anything to plot.")
@@ -184,4 +196,4 @@ plt.xlabel("Generations")
 plt.ylabel("Fitness")
 plt.show()
 
-raw_input("Press anything to end")
+raw_input("Press anything to end program.")
