@@ -2,6 +2,7 @@ from __future__ import print_function
 import neat
 import numpy as np
 import os
+import sys
 from scipy.sparse import coo_matrix
 from scipy.sparse.linalg import spsolve
 import matplotlib
@@ -16,58 +17,41 @@ import topopt
 
 # NEAT implementation of topological optimization
 POPSIZE = 50
-NGEN = 50
+NGEN = 150
 numX = 30
 numY = 10
 volfrac = 0.4
-top_inputs = []
+inputs = []
 
-# always used for network output
-
-
-def sigmoid_act(x):
-    return 1 / (1 + np.exp(-x))
 
 # sets input for nn as the (x,y) locations of each node as a tuple
 
 
 for x in range(1, numX + 1):
-    for y in range(1, numY + 1):
-        top_inputs.append((x - .5, y - .5))
+    inputs.append(x)
+
+tmp = np.array(inputs, copy = True)
+MEAN = np.mean(tmp)
+STD = np.std(tmp)
+
+#list of normalized inputs
+normIn = [] 
+
+#creates input list with normalized vectors
+for y in range(0,numY):
+    for x in range(0,numX):
+        tup = (np.fabs(x - MEAN)/STD, np.fabs(y-MEAN)/STD)
+        normIn.append(tup)
+
 
 top_outputs = []
 
 AVG_FITNESSES = []
 INDIVIDUALS = []
 NETS = []
-xIn = []
-yIn = []
-
-# configures inputs
-for y in range(0, numY):
-    for x in range(0, numX):
-        xIn.append(x)
-        yIn.append(y)
-
-# must normalize all inputs for CPPN to create fluid structures
-tmp = np.array(xIn, copy=True)
-# NOTE: mean/std for xIn and yIn will always be the same
-MEAN = np.mean(tmp)
-STD = np.std(tmp)
-
-
-normX = []
-normY = []
 
 
 
-# creates input lists with the normalized vectors
-for y in range(0, numY):
-    for x in range(0, numX):
-        normX.append((x - MEAN) / STD)
-        normY.append((y - MEAN) / STD)
-
-# sigmoid activation to always pass activations through
 def sigmoid_act(x):
     return expit(x)
 
@@ -91,10 +75,15 @@ def eval_genomes(genomes, config):
         outList = []
         # must unzip all the elements and run the network for each
         # input in input list
-        for z in range(len(xIn)):
+        for z in range(len(normIn)):
             # always passes output through sigmoid
-            in_tuple = (normX[z], normY[z])
-            x = sigmoid_act(net.activate(in_tuple)[0])
+            x = sigmoid_act(net.activate(normIn[z])[0])
+            #must make x either 1 or 0
+            #if it can be .5 the program will yield a completely grey solution
+            if(x>=.5):
+                x = 1
+            else:
+                x = 0
             outList.append(x)
 
         # initialized as a regular list and copied as a numpy array to resize
@@ -111,14 +100,20 @@ def eval_genomes(genomes, config):
         counter = counter + 1
         #penalize the genome if it uses too much material or too little material
         #penalty is scaled based on how for away it is from desired volfrac
-        if(real_volfrac > volfrac):
+        if(real_volfrac == 1 or real_volfrac == 0):
+            #attempts to eliminate empty solutions
+            genome.fitness -= sys.maxint
+        elif(real_volfrac > volfrac):
             penalty = real_volfrac - volfrac
-            genome.fitness += (1+penalty)*fit
+            genome.fitness -= (1+penalty)*fit
         elif(real_volfrac < .2):
+            #cannot let this solution have objective of 0 because it will become optimal
+            #must add something to fitness because multiplying 0 by penalty still yields 0 
             penalty = np.fabs(real_volfrac - volfrac)
-            genome.fitness += (1+penalty)*fit
+            genome.fitness -= (1+penalty)*fit + 1000*(1 + penalty) 
         else:
-            genome.fitness += fit
+            #just use normal fitness if solution is within volfrac
+            genome.fitness -= fit
 
             
 
@@ -151,8 +146,8 @@ winner_net = neat.nn.FeedForwardNetwork.create(winner, config)
 print('\nNet Info:\n{!s}'.format(winner))
 fullOutput = []
 # this loop doesnt work because every evaluation needs the full
-for xi in top_inputs:
-    fullOutput.append(sigmoid_act(winner_net.activate(xi)[0]))
+for xi in normIn:
+    fullOutput.append( 1 if((sigmoid_act(winner_net.activate(xi)[0])) >= .5) else 0)
 
 print(fullOutput)
 raw_input("Enter anything to plot result")

@@ -1,7 +1,7 @@
 #--- parameters for the TopOpt experiment ---#
 
 [NEAT]
-fitness_criterion     = min
+fitness_criterion     = max
 fitness_threshold     = 0
 pop_size              = 50
 reset_on_extinction   = False
@@ -10,7 +10,7 @@ no_fitness_termination = True
 [DefaultGenome]
 # node activation options
 activation_default      = random
-activation_mutate_rate  = 0.2
+activation_mutate_rate  = 0.1
 activation_options      = sigmoid sin tanh gauss log
 
 # node aggregation options
@@ -25,20 +25,20 @@ bias_init_type          = uniform
 bias_max_value          = 1.0
 bias_min_value          = -1.0
 bias_mutate_power       = 0.5
-bias_mutate_rate        = 0.2
-bias_replace_rate       = 0.2
+bias_mutate_rate        = 0.1
+bias_replace_rate       = 0.1
 
 # genome compatibility options
 compatibility_disjoint_coefficient = 1.0
 compatibility_weight_coefficient   = 0.5
 
 # connection add/remove rates
-conn_add_prob           = 0.2
-conn_delete_prob        = 0.2
+conn_add_prob           = 0.1
+conn_delete_prob        = 0.1
 
 # connection enable options
 enabled_default         = True
-enabled_mutate_rate     = 0.05
+enabled_mutate_rate     = 0.1
 
 
 feed_forward            = True
@@ -65,18 +65,18 @@ response_replace_rate   = 0.1
 # connection weight options
 weight_init_mean        = 0.0
 weight_init_stdev       = 1.0
-weight_max_value        = 30.0
-weight_min_value        = -30.0
+weight_max_value        = 10.0
+weight_min_value        = -10.0
 weight_mutate_power     = 0.5
 weight_mutate_rate      = 0.1
 weight_replace_rate     = 0.1
 
 [DefaultSpeciesSet]
-compatibility_threshold = 2.0
+compatibility_threshold = 3.0
 
 [DefaultStagnation]
-species_fitness_func = min
-max_stagnation       = 20
+species_fitness_func = max
+max_stagnation       = 8
 species_elitism      = 2
 
 [DefaultReproduction]
