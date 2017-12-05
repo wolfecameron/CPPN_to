@@ -3,82 +3,50 @@ from SIMPLE_CPPN_Structure import Genotype
 import copy
 
 
-#this function is the varAnd DEAP function adapted to fit the needs of our structure
-def var_algo(population,cxpb, mutpb, structChange):
-	
-	#creates copy of population to vary
+def var_algo(population, cxpb, mutpb, structChange):
+	# creates copy of population to vary
 	offspring = [ind for ind in population]
 	randStartNode = random.randint(0, offspring[0].size - 1)
 	randEndNode = random.randint(offspring[0].numIn, offspring[0].size - 1)
 	tries = 0
-	#print("first: ")
-	#print (offspring[0].size)
 	if structChange:
+		choice = random.choice([1,2])
+		if(choice == 1):
+			successLink = linkMutatePop(offspring, randStartNode, randEndNode)
+			if(not successLink):
+				nodeMutatePop(offspring, randStartNode,randEndNode)
+			else:
+				print("LINK MUTATE")
 		print("need to change")
+		if(choice == 2):
+			nodeMutatePop(offspring, randStartNode, randEndNode)
 
-#		valid = offspring[0].linkMutate(randStartNode, randEndNode);
-#		while (not valid and  tries < 10):
-			#tries = tries + 1
-			#randStartNode = random.randint(0, offspring[0].size - 1)
-			#randEndNode = random.randint(offspring[0].numIn, offspring[0].size - 1)
-			#valid = offspring[0].linkMutate(randStartNode, randEndNode);
-		#if valid:
-	#		print("SUCCESS LINK MUTATE")
-	#		print(offspring[0].__str__())
-		#	offspring[0].fitness = 0
-		#	for i in range(1, len(offspring)):
-#				print("NODE "+ str(i))
-#				print ("connections " + str(len(offspring[i].connectionList)))
-		#		offspring[i].linkMutate(randStartNode, randEndNode)
-				#print(len(offspring[i].connectionList))
-		#		offspring[i].fitness = 0
-		#else:
-
-		tries = 0
-		layerNum = random.randint(1, offspring[0].highestHidden + 2)
-		randStartNode2 = getSecondStartNode(offspring[0].size - 1, randStartNode)
-		valid = offspring[0].nodeMutate(randStartNode,randStartNode2, randEndNode, layerNum)
-		while(not valid and tries < 100000):
-			tries = tries + 1
-			randStartNode = random.randint(0, offspring[0].size - 1)
-			randStartNode2 = getSecondStartNode(offspring[0].size - 1, randStartNode)
-			randEndNode = random.randint(offspring[0].numIn, offspring[0].size - 1)
-			layerNum = random.randint(1, offspring[0].highestHidden + 2)
-			valid = offspring[0].nodeMutate(randStartNode, randStartNode2, randEndNode, layerNum)
-		if valid:
-#			print("SUCCESS NODE MUTATE")
-#			print(offspring[0].__str__())
-			offspring[0].fitness = 0
-#			print("node mutate")
-			for i in range(1, len(offspring)):
-#				print("node " + str(i))
-				offspring[i].nodeMutate(randStartNode,randStartNode2, randEndNode, layerNum)
-				offspring[i].fitness = 0
-
-	#	print (offspring[0].__str__())
-#	if(structChange):
-#		print("Testing after mutate ")
-#		testingSameStruct(offspring)	
+			#	print (offspring[0].__str__())
+			#	if(structChange):
+			#		print("Testing after mutate ")
+			#		testingSameStruct(offspring)
 	for i in range(len(offspring)):
-		if(offspring[i].weightMutate(mutpb)):
+		if (offspring[i].weightMutate(mutpb)):
 			offspring[i].fitness = 0
-		
-		
-		#elif r > (mutpb/2) and r < mutpb and structChange:
-			#random.choice([offspring[i].linkMutate(), offspring[i].disableMutate()])
-			#offspring[i].fitness = 0
-#	print("Testing after point mutate")
-#	testingSameStruct(offspring)
-	
-	for i in range(1,len(offspring)):
+		if(offspring[i].activationMutate(mutpb)):
+			offspring[i].fitness = 0
+
+
+		# elif r > (mutpb/2) and r < mutpb and structChange:
+		# random.choice([offspring[i].linkMutate(), offspring[i].disableMutate()])
+		# offspring[i].fitness = 0
+		#	print("Testing after point mutate")
+		#	testingSameStruct(offspring)
+
+	for i in range(1, len(offspring)):
 		x = random.random()
-		if(x<cxpb):
-			offspring[i] = offspring[i].crossover(offspring[i-1])
+		if (x < cxpb):
+			offspring[i] = offspring[i].crossover(offspring[i - 1])
 			offspring[i].fitness = 0
-			
-#	print("Testing after crossover")
-#	testingSameStruct(offspring)
-	#print ("Var worked")
+
+		#	print("Testing after crossover")
+		#	testingSameStruct(offspring)
+	# print ("Var worked")
 	return offspring
 def testingSameStruct(pop):
 	for i in range(len(pop)):
@@ -92,7 +60,7 @@ def getSecondStartNode(a, firstNode):
 	while (secondNode == firstNode and tries < 10):
 		secondNode = random.randint(0,a)
 		tries = tries + 1
-	return secondNode	
+	return secondNode
 
 def selRand(individuals):
 	#randomly selects k individuals out of the population
@@ -106,6 +74,48 @@ def findFittest(tourn):
 			fittest = tourn[i]
 	
 	return fittest
+def linkMutatePop(offspring, randStartNode, randEndNode):
+	tries = 0
+	valid = offspring[0].linkMutate(randStartNode, randEndNode);
+	while (not valid and  tries < 10):
+		tries = tries + 1
+		randStartNode = random.randint(0, offspring[0].size - 1)
+		randEndNode = random.randint(offspring[0].numIn, offspring[0].size - 1)
+		valid = offspring[0].linkMutate(randStartNode, randEndNode);
+	if valid:
+#		print("SUCCESS LINK MUTATE")
+#		print(offspring[0].__str__())
+		offspring[0].fitness = 0
+		for i in range(1, len(offspring)):
+#				print("NODE "+ str(i))
+#				print ("connections " + str(len(offspring[i].connectionList)))
+			offspring[i].linkMutate(randStartNode, randEndNode)
+# print(len(offspring[i].connectionList))
+			offspring[i].fitness = 0
+	return valid
+
+
+def nodeMutatePop(offspring, randStartNode, randEndNode):
+	tries = 0
+	layerNum = random.randint(1, offspring[0].highestHidden + 1)
+	randStartNode2 = getSecondStartNode(offspring[0].size - 1, randStartNode)
+	valid = offspring[0].nodeMutate(randStartNode, randStartNode2, randEndNode, layerNum)
+	while (not valid and tries < 100000):
+		tries = tries + 1
+		randStartNode = random.randint(0, offspring[0].size - 1)
+		randStartNode2 = getSecondStartNode(offspring[0].size - 1, randStartNode)
+		randEndNode = random.randint(offspring[0].numIn, offspring[0].size - 1)
+		layerNum = random.randint(1, offspring[0].highestHidden + 1)
+		valid = offspring[0].nodeMutate(randStartNode, randStartNode2, randEndNode, layerNum)
+	if valid:
+		#			print("SUCCESS NODE MUTATE")
+		#			print(offspring[0].__str__())
+		offspring[0].fitness = 0
+		#			print("node mutate")
+		for i in range(1, len(offspring)):
+			#				print("node " + str(i))
+			offspring[i].nodeMutate(randStartNode, randStartNode2, randEndNode, layerNum)
+			offspring[i].fitness = 0
 	
 def selectPop(population, numReturn, tournSize): #inputs: population list, number of individuals to return, number of individuals in each tournament
 	newPop = [] #holds list of selected individuals
