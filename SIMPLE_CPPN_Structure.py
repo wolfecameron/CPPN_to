@@ -241,6 +241,8 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 	def nodeMutate(self, a, b,  d, layerNum):
 		self.nodeList.append(Node(self.size, 0, layerNum))
 
+		#should implement something to have this repeat if it breaks, adding complexity must occur when needed!!!!!
+		#this could be easily implemented with return values in the evolutionary code
 		validChange = self.validConnection(a, self.size) and self.validConnection(self.size,d) and self.validConnection(b, self.size)
 		if(validChange):
 			self.makeConnection(a, self.size, random.uniform(-2, 2))
