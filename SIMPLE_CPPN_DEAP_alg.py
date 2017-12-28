@@ -7,7 +7,7 @@ def var_algo(population, cxpb, mutpb, structChange):
 	# creates copy of population to vary
 	offspring = [ind for ind in population]
 	randStartNode = random.randint(0, offspring[0].size - 1)
-	randEndNode = random.randint(offspring[0].numIn, offspring[0].size - 1)
+	randEndNode = random.randint(offspring[0].numIn, offspring[0].size - 1) #should start of randint be randStartNode
 	tries = 0
 	if structChange:
 		choice = random.choice([1,2])
@@ -15,16 +15,20 @@ def var_algo(population, cxpb, mutpb, structChange):
 			successLink = linkMutatePop(offspring, randStartNode, randEndNode)
 			if(not successLink):
 				nodeMutatePop(offspring, randStartNode,randEndNode)
+				print("NODE MUTATE")
 			else:
 				print("LINK MUTATE")
-		print("need to change")
+		
 		if(choice == 2):
 			nodeMutatePop(offspring, randStartNode, randEndNode)
+			print("NODE MUTATE")
 
 			#	print (offspring[0].__str__())
 			#	if(structChange):
 			#		print("Testing after mutate ")
 			#		testingSameStruct(offspring)
+	'''
+	DONT NEED TO ADD EXTRA POINT MUTATIONS IMMEDIATELY AFTER STRUCTURAL MUTATION
 	for i in range(len(offspring)):
 		if (offspring[i].weightMutate(mutpb)):
 			offspring[i].fitness = 0
@@ -47,13 +51,21 @@ def var_algo(population, cxpb, mutpb, structChange):
 		#	print("Testing after crossover")
 		#	testingSameStruct(offspring)
 	# print ("Var worked")
+	'''
+	#Returns population with new structural mutation
 	return offspring
+
+
+
+#tests entire population to make sure the individuals have the same genotype (all same structure different weights)
 def testingSameStruct(pop):
 	for i in range(len(pop)):
 		for j in range(len(pop)):
 			if(not(i == j)):
-				if(len(pop[i].nodeList) != len(pop[j].nodeList)):
-					print("problem " + str(i) + " " + str(j)) 
+				if(not(len(pop[i].nodeList) == len(pop[j].nodeList)) or not(len(pop[i].connectionList) == len(pop[j].connectionList))):
+					print("problem " + str(pop[i]) + " " + str(pop[j])) 
+
+
 def getSecondStartNode(a, firstNode):
 	secondNode = random.randint(0, a)
 	tries = 0
@@ -62,11 +74,14 @@ def getSecondStartNode(a, firstNode):
 		tries = tries + 1
 	return secondNode
 
+
+
 def selRand(individuals):
 	#randomly selects k individuals out of the population
-	size = len(individuals)
-	return individuals[random.randint(0,size-1)]
+	return individuals[random.randint(0,len(individuals))]
 	
+
+
 def findFittest(tourn):
 	fittest = tourn[0] #sets fittest to an initial value
 	for i in range(1,len(tourn)):
@@ -74,6 +89,10 @@ def findFittest(tourn):
 			fittest = tourn[i]
 	
 	return fittest
+
+
+
+#creates a new connection in all of individuals in a population (same connection with different weight for every individual)
 def linkMutatePop(offspring, randStartNode, randEndNode):
 	tries = 0
 	valid = offspring[0].linkMutate(randStartNode, randEndNode);
@@ -92,7 +111,12 @@ def linkMutatePop(offspring, randStartNode, randEndNode):
 			offspring[i].linkMutate(randStartNode, randEndNode)
 # print(len(offspring[i].connectionList))
 			offspring[i].fitness = 0
+	else: 
+		print("Population Link Mutate Was Unsuccessful After 10 Tries")
+
+
 	return valid
+
 
 
 def nodeMutatePop(offspring, randStartNode, randEndNode):
@@ -100,7 +124,7 @@ def nodeMutatePop(offspring, randStartNode, randEndNode):
 	layerNum = random.randint(1, offspring[0].highestHidden + 1)
 	randStartNode2 = getSecondStartNode(offspring[0].size - 1, randStartNode)
 	valid = offspring[0].nodeMutate(randStartNode, randStartNode2, randEndNode, layerNum)
-	while (not valid and tries < 100000):
+	while (not valid and tries < 100):
 		tries = tries + 1
 		randStartNode = random.randint(0, offspring[0].size - 1)
 		randStartNode2 = getSecondStartNode(offspring[0].size - 1, randStartNode)
@@ -116,6 +140,8 @@ def nodeMutatePop(offspring, randStartNode, randEndNode):
 			#				print("node " + str(i))
 			offspring[i].nodeMutate(randStartNode, randStartNode2, randEndNode, layerNum)
 			offspring[i].fitness = 0
+
+
 	
 def selectPop(population, numReturn, tournSize): #inputs: population list, number of individuals to return, number of individuals in each tournament
 	newPop = [] #holds list of selected individuals
@@ -130,6 +156,9 @@ def selectPop(population, numReturn, tournSize): #inputs: population list, numbe
 		newPop.append(copy.deepcopy(findFittest(competitors)))
 		
 	return newPop
+
+
+
 def selectPop2(population, selectPressure):
 	sortedPop = sorted(population, key=lambda ind: ind.fitness, reverse=False)
 	newPop = []
