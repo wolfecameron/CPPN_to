@@ -5,6 +5,7 @@ import copy
 
 def var_algo(population, cxpb, mutpb, structChange):
 	# creates copy of population to vary
+	#for each offspring
 	offspring = [ind for ind in population]
 	randStartNode = random.randint(0, offspring[0].size - 1)
 	randEndNode = random.randint(offspring[0].numIn, offspring[0].size - 1) #should start of randint be randStartNode
@@ -15,13 +16,13 @@ def var_algo(population, cxpb, mutpb, structChange):
 			successLink = linkMutatePop(offspring, randStartNode, randEndNode)
 			if(not successLink):
 				nodeMutatePop(offspring, randStartNode,randEndNode)
-				print("NODE MUTATE")
-			else:
-				print("LINK MUTATE")
+				#print("NODE MUTATE")
+			#else:
+				#print("LINK MUTATE")
 		
 		if(choice == 2):
 			nodeMutatePop(offspring, randStartNode, randEndNode)
-			print("NODE MUTATE")
+			#print("NODE MUTATE")
 
 			#	print (offspring[0].__str__())
 			#	if(structChange):
@@ -78,7 +79,7 @@ def getSecondStartNode(a, firstNode):
 
 def selRand(individuals):
 	#randomly selects k individuals out of the population
-	return individuals[random.randint(0,len(individuals))]
+	return individuals[random.randint(0,len(individuals)-1)]
 	
 
 
@@ -96,7 +97,7 @@ def findFittest(tourn):
 def linkMutatePop(offspring, randStartNode, randEndNode):
 	tries = 0
 	valid = offspring[0].linkMutate(randStartNode, randEndNode);
-	while (not valid and  tries < 10):
+	while (not valid and  tries < 20):
 		tries = tries + 1
 		randStartNode = random.randint(0, offspring[0].size - 1)
 		randEndNode = random.randint(offspring[0].numIn, offspring[0].size - 1)
@@ -118,7 +119,7 @@ def linkMutatePop(offspring, randStartNode, randEndNode):
 	return valid
 
 
-
+#inserts new node into entire population (same node into each individual with different weights)
 def nodeMutatePop(offspring, randStartNode, randEndNode):
 	tries = 0
 	layerNum = random.randint(1, offspring[0].highestHidden + 1)
@@ -166,7 +167,8 @@ def selectPop2(population, selectPressure):
 	for i in range(topNum):
 		newPop.append(sortedPop[i])
 	for i in range(len(population) - topNum):
-		newPop.append(copy.deepcopy(selRand(newPop)))
+		newPop.append(copy.deepcopy(selRand(newPop))) #why is a deep copy needed?
+	
 	return newPop
 
 '''

@@ -98,7 +98,6 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 		for x in self.connectionList:
 			print "Connection #" + str(counter) + ":" + " [" + str(x.nodeIn) + "]---(" + str(x.weight) + ")-->[" + str(x.nodeOut) + "]" 
 			print "Status: " + str(x.activationStatus)
-			print "Activation: " + str(x.activationKey)
 			counter += 1
 			print " " 
 		
@@ -189,23 +188,23 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 		#only included for debugging purposes
 		if(not(len(self.connectionList) == len(parent2.connectionList))):
 			print("Connection lists are not same length - something is wrong!")
-			break
+		
+		else:
+			for i  in range(len(self.connectionList)):
+				if (random.random() >= xpb):
+					#swaps weights of parents
+					w1 = parent2.connectionList[i].weight
+					self.connectionList[i].weight = w1
+					self.nodeList[connectionList[i].nodeOut].updateConnectingNodeWeights(self.nodeList[connectionList[i].nodeIn],w1) #updates connection data for evaluation
+					#parent2.connectionList[i].weight = w1
 
-		for i  in range(len(self.connectionList)):
-			if (random.random() >= xpb):
-				#swaps weights of parents
-				w1 = parent2.connectionList[i].weight
-				self.connectionList[i].weight = w1
-				self.nodeList[connectionList[i].nodeOut].updateConnectingNodeWeights(self.nodeList[connectionList[i].nodeIn],w1) #updates connection data for evaluation
-				#parent2.connectionList[i].weight = w1
+				if(random.random() >= xpb):
+					#swaps activation functions of parents
+					key1 = self.nodeList[self.connectionList[i].nodeOut].activationKey
+					self.nodeList[self.connectionList[i].nodeOut].activationKey = parent2.nodeList[parent2.connectionList[i].nodeOut].activationKey
+					#parent2.nodeList[parent2.connectionList[i].nodeOut].activationKey = key1
 
-			if(random.random() >= xpb):
-				#swaps activation functions of parents
-				key1 = self.nodeList[self.connectionList[i].nodeOut].activationKey
-				self.nodeList[self.connectionList[i].nodeOut].activationKey = parent2.nodeList[parent2.connectionList[i].nodeOut].activationKey
-				#parent2.nodeList[parent2.connectionList[i].nodeOut].activationKey = key1
-
-		return self
+			return self
 
 	#mutates an individual weights in a genotype based on mutpb, returns true if mutation occurs
 	def weightMutate(self, mutpb):
@@ -245,10 +244,10 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 		#this could be easily implemented with return values in the evolutionary code
 		validChange = self.validConnection(a, self.size) and self.validConnection(self.size,d) and self.validConnection(b, self.size)
 		if(validChange):
-			self.makeConnection(a, self.size, random.uniform(-2, 2))
+			self.makeConnection(a, self.size, random.uniform(-2, 2)) #creates random weights so they are different for all individuals
 			self.makeConnection(b, self.size, random.uniform(-2, 2))
 			self.makeConnection(self.size, d, random.uniform(-2, 2))
-			self.size +=1  # increments size of structurei
+			self.size +=1  # increments size of structure
 			if (layerNum > self.highestHidden):
 				self.highestHidden = layerNum
 		else:
