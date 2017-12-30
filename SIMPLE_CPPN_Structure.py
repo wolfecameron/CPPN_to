@@ -4,6 +4,10 @@ import numpy as np
 import sys
 from CPPNActivationFunctions import simpleAct, sig, noAct, relu, sinAct, tanhAct
 import math
+import matplotlib.pyplot as plt
+from matplotlib import colors
+
+
 
 
 class Node:  # stores the number of total nodes and the type (input,hidden,output) of each node
@@ -36,15 +40,16 @@ class Connection:  # stores node connections and corresponding weights, may be a
 
 class Genotype:  # Genotype class contains all mutation/evolutionary method/all info about network structure
 
-	def __init__(self, numIn):  # takes argument for number of input nodes in CPPN
+	def __init__(self, numIn, numOut):  # takes argument for number of input nodes and output nodes in CPPN
 
 		# creates properties to contain all nodes/connections/information for each genotype
 		self.numIn = numIn  # track number of inputs into network
+		self.numOut = numOut
 		self.outputIndex = numIn;  # stores index of output node
 		self.globalInnovation = 0
 		self.nodeList = []  # stores all nodes in a single list
 		self.connectionList = []  # stores information for all conections within the neural network
-		self.size = numIn + 1  # stores number of total nodes in the network
+		self.size = numIn + numOut  # stores number of total nodes in the network
 		self.fitness = 0
 		self.highestHidden = 0 #highest hidden layer currently in netwoek
 
@@ -52,18 +57,22 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 		for i in range(0, numIn):
 			# nodes initialized with value of zero, values created later
 			self.nodeList.append(Node(i, 0, 0))  # creates input nodes (number of inputs is parameterized)
-		#layer number of output is sys.maxint to always keep it at the end of the list
-		self.nodeList.append(Node(numIn, 0, sys.maxint))  # networks start with a single hidden node and output node to maximize simplicity
-		self.nodeList[-1].activationKey = 2 #have to make sure this activation key never changes, must always be sigmoid
+		
+		#layer number of outputs is sys.maxint to always keep it at the end of the list
+		for x in range(numOut):
+			self.nodeList.append(Node(numIn + x, 0, sys.maxint))  # networks start with input nodes and output nodes (no hidden) to maximize simplicity
+			self.nodeList[-1].activationKey = 3 #have to make sure this activation key never changes, must always be sigmoid
 		#self.nodeList.append(Node(numIn + 1, 0, "output"))  # creates output node
 
 		# connectionList creation loop
+		#connects all inputs fully to outputs
 		for i in range(0, numIn):
-			weight = random.uniform(-1, 1)
-			# creates connections between the inputs and output (start w/0 hidden nodes)
-			self.connectionList.append(Connection(i, self.numIn, weight, True, self.globalInnovation))
-			#self.connectionList.append(Connection(i, self.numIn, 1, True, self.globalInnovation))
-			self.nodeList[self.numIn].connectingNodes.append([self.nodeList[i], weight])
+			for x in range(numOut):
+				weight = random.uniform(-1, 1)
+				# creates connections between the inputs and output (start w/ hidden nodes)
+				self.connectionList.append(Connection(i, self.numIn + x, weight, True, self.globalInnovation))
+				#self.connectionList.append(Connection(i, self.numIn, 1, True, self.globalInnovation))
+				self.nodeList[self.numIn + x].connectingNodes.append([self.nodeList[i], weight])
 			
 		'''
 		# creates final connection to output
@@ -86,7 +95,7 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 				layer = "output"
 			else:
 				layer = str(i.layerNum)
-			activation = ["no activation", "step function", "sigmoid", "rectifer", "sine", "hyperbolic tangent" ]
+			activation = ["no activation", "simple activation", "sigmoid", "relu", "sine", "hyperbolic tangent" ]
 
 			print "Node Number: " + str(i.nodeNumber) + " Layer: " + layer +  " Activation: " + activation[i.activationKey - 1]
 		
@@ -128,6 +137,8 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 	def evaluate(self, inputs):
 		sortedNodes = sorted(self.nodeList,key = lambda x: x.layerNum) #sorts node list by layer number
 
+		outputs = []
+
 		for i in range(len(sortedNodes)):
 			nodeVal = 0 #used to get sum of connecting nodes value
 			node = sortedNodes[i]
@@ -140,15 +151,16 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 			#node.value = activate(node.activation, nodeVal)
 			node.value = nodeVal
 			self.activate(node)
-		#	node.visited = True
-		answer = sortedNodes[-1].value
-		#sortedNodes v self.nodeList???
+		
+		#adds all output values to the list of outputs
+		for x in range(len(sortedNodes) - self.numOut, len(sortedNodes)):
+			outputs.append(sortedNodes[x].value)
+
+
 		for node in sortedNodes: #sets node values back to 0 for next evaluation
-		#	if(node.visited == False):
-		#		print("ERROR - ALL NODES NOT EVALUATED")
 			node.value = 0
-		#	node.visited = False
-		return answer
+		
+		return outputs
 
 	#creates node given hidden layer number and updates state of the network
 	def makeNode(self, hidden):
@@ -260,3 +272,27 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 		if(validChange):
 			self.makeConnection(a, b, random.uniform(-2,2))
 		return validChange
+
+	#helper function to graph output of the CPPN
+	def graphOutput(self,outList, numX, numY):
+			if(not(len(outList) == numX * numY)):
+				print("Error: Length of Output does not match x and y dimensions.")
+			else: 
+				plt.ion()
+				x = np.array(outList, copy = True)
+		    	fig,ax = plt.subplots()
+		    	im = ax.imshow(-x.reshape(numX, numY).T, cmap='gray', interpolation='none', norm=colors.Normalize(vmin=-1, vmax=0))
+		    	fig.show()
+
+
+
+
+x = Genotype(2,3)
+outList = [1,0,1000,1]
+x.graphOutput(outList,2,2)
+raw_input("should have plotted test")
+print(x)
+outputs = x.evaluate([2,2])
+for z in outputs:
+	print z
+

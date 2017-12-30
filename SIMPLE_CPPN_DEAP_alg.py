@@ -1,6 +1,7 @@
 import random
 from SIMPLE_CPPN_Structure import Genotype
 import copy
+import matplotlib.pyplot as plt
 
 
 def var_algo(population, cxpb, mutpb, structChange):
@@ -170,6 +171,17 @@ def selectPop2(population, selectPressure):
 		newPop.append(copy.deepcopy(selRand(newPop))) #why is a deep copy needed?
 	
 	return newPop
+
+#helper function to graph output of the CPPN
+def graphOutput(outList, numX, numY):
+		if(not(len(outList) == numX * numY)):
+			print("Error: Length of Output does not match x and y dimensions.")
+		else: 
+			plt.ion()
+			x = np.array(outList, copy = True)
+	    	fig,ax = plt.subplots()
+	    	im = ax.imshow(-x.reshape(numX, numY).T, cmap='gray', interpolation='none', norm=colors.Normalize(vmin=-1, vmax=0))
+	    	fig.show()
 
 '''
 #tests the select function	
