@@ -248,7 +248,7 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 	#d higher node
 	# layerNum is the layer the node being added will have
 	#returns true if node mutate is successful
-	#pre a,b < layerNum < d
+	#pre a,b < layerNum < doutList = [1,
 	def nodeMutate(self, a, b,  d, layerNum):
 		self.nodeList.append(Node(self.size, 0, layerNum))
 
