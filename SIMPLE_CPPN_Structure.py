@@ -281,12 +281,12 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 				plt.ion()
 				x = np.array(outList, copy = True)
 		    	fig,ax = plt.subplots()
-		    	im = ax.imshow(-x.reshape(numX, numY).T, cmap='gray', interpolation='none', norm=colors.Normalize(vmin=-1, vmax=0))
+		    	im = ax.imshow(-x.reshape(numX, numY), cmap='gray', interpolation='none', norm=colors.Normalize(vmin=-1, vmax=0))
 		    	fig.show()
 
 
 
-
+'''
 x = Genotype(2,3)
 outList = [1,0,1000,1]
 x.graphOutput(outList,2,2)
@@ -296,3 +296,4 @@ outputs = x.evaluate([2,2])
 for z in outputs:
 	print z
 
+'''
