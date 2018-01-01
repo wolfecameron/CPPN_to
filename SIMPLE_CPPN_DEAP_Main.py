@@ -1,4 +1,3 @@
-
 import numpy as np
 from SIMPLE_CPPN_Structure import Genotype
 #from old_struct import Genotype, CPPN
@@ -16,10 +15,10 @@ def evalNetwork(g_param):
 	idealResults = [0,1,1,0]
 	results = []
 	#evaluates first set of inputs
-	results.append(float(g_param.evaluate([0,0])))
-	results.append(float(g_param.evaluate([0, 1])))
-	results.append(float(g_param.evaluate([1, 0])))
-	results.append(float(g_param.evaluate([1, 1])))
+	results.append(float(g_param.evaluate([0,0])[0]))
+	results.append(float(g_param.evaluate([0, 1])[0]))
+	results.append(float(g_param.evaluate([1, 0])[0]))
+	results.append(float(g_param.evaluate([1, 1])[0]))
 	for i in range(0,len(idealResults)):
 		fitness += math.fabs(float(idealResults[i] - results[i])) #keeps values positive
 	
@@ -48,10 +47,11 @@ def getAverageTrailingFitness(trailingFitness):
 
 #defined constants and hyperparameters
 NUM_INPUTS = 2
-POP_SIZE = 25
+NUM_OUTPUTS = 1
+POP_SIZE = 50
 
 #probability crossover, mutatuion, number of generations
-cxpb , mutpb, ngen = .1, .1, 500
+cxpb , mutpb, ngen = .1, .1, 300
 
 #theshold for how little change signals a structural mutation
 STAG_THRESHOLD = 5
@@ -77,7 +77,7 @@ pop = []
 
 
 for i in range(POP_SIZE):
-	geno = Genotype(NUM_INPUTS)
+	geno = Genotype(NUM_INPUTS, NUM_OUTPUTS)
 	pop.append(geno)
 
 #sets initial fitness of the population

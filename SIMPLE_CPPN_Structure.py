@@ -61,7 +61,7 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 		#layer number of outputs is sys.maxint to always keep it at the end of the list
 		for x in range(numOut):
 			self.nodeList.append(Node(numIn + x, 0, sys.maxint))  # networks start with input nodes and output nodes (no hidden) to maximize simplicity
-			self.nodeList[-1].activationKey = 3 #have to make sure this activation key never changes, must always be sigmoid
+			self.nodeList[-1].activationKey = 2 #have to make sure this activation key never changes, must always be sigmoid
 		#self.nodeList.append(Node(numIn + 1, 0, "output"))  # creates output node
 
 		# connectionList creation loop
