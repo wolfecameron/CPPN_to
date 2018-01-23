@@ -23,9 +23,11 @@ class Node:  # stores the number of total nodes and the type (input,hidden,outpu
 		for nodeData in self.connectingNodes:
 			if(nodeData[0] == node):
 				nodeData[1] = weight
+				#returns immediately upon finding node to update
+				return
 
 class Connection:  # stores node connections and corresponding weights, may be activated or not, innovation number stores gene history
-	def __init__(self, nodeIn, nodeOut, weight, activationStatus, innovNum):
+	def __init__(self, nodeIn, nodeOut, weight, activationStatus):
 		self.nodeIn = nodeIn  # data type of nodeIn and nodeOut is Integer - correlates to the nodes position in the nodeList
 		self.nodeOut = nodeOut
 		self.weight = weight
@@ -35,6 +37,7 @@ class Connection:  # stores node connections and corresponding weights, may be a
 	def equalConnection(self, inNode, outNode):
 		if (self.nodeIn == inNode and self.nodeOut == outNode):
 			return True
+		
 		return False
 
 
@@ -46,7 +49,6 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 		self.numIn = numIn  # track number of inputs into network
 		self.numOut = numOut
 		self.outputIndex = numIn;  # stores index of output node
-		self.globalInnovation = 0
 		self.nodeList = []  # stores all nodes in a single list
 		self.connectionList = []  # stores information for all conections within the neural network
 		self.size = numIn + numOut  # stores number of total nodes in the network
@@ -58,9 +60,9 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 			# nodes initialized with value of zero, values created later
 			self.nodeList.append(Node(i, 0, 0))  # creates input nodes (number of inputs is parameterized)
 		
-		#layer number of outputs is sys.maxint to always keep it at the end of the list
+		#layer number of outputs is sys.maxsize to always keep it at the end of the list
 		for x in range(numOut):
-			self.nodeList.append(Node(numIn + x, 0, sys.maxint))  # networks start with input nodes and output nodes (no hidden) to maximize simplicity
+			self.nodeList.append(Node(numIn + x, 0, sys.maxsize))  # networks start with input nodes and output nodes (no hidden) to maximize simplicity
 			self.nodeList[-1].activationKey = 2 #have to make sure this activation key never changes, must always be sigmoid
 		#self.nodeList.append(Node(numIn + 1, 0, "output"))  # creates output node
 
@@ -70,48 +72,41 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 			for x in range(numOut):
 				weight = random.uniform(-1, 1)
 				# creates connections between the inputs and output (start w/ hidden nodes)
-				self.connectionList.append(Connection(i, self.numIn + x, weight, True, self.globalInnovation))
-				#self.connectionList.append(Connection(i, self.numIn, 1, True, self.globalInnovation))
+				self.connectionList.append(Connection(i, self.numIn + x, weight, True))
+		
 				self.nodeList[self.numIn + x].connectingNodes.append([self.nodeList[i], weight])
-			
-		'''
-		# creates final connection to output
-		self.connectionList.append(Connection(self.numIn, self.numIn+1, random.randint(-2,2), True, self.globalInnovation))
-		self.nodeList[self.numIn+1].connectingNodes.append(self.numIn)
-		#self.makeConnection(numIn, numIn + 1, random.randint(-2, 2))
-		'''
 		
 		
 	#toString method for genotype: prints all information 
 	def __str__(self):
-		print "NETWORK SIZE: " + str(self.size)
-		print " " 
+		print("NETWORK SIZE: " + str(self.size))
+		print(" ") 
 		
 		print("NODE LIST:")
 		for i in self.nodeList:
 			if(i.layerNum == 0):
 				layer = "input"
-			if(i.layerNum == sys.maxint):
+			if(i.layerNum == sys.maxsize):
 				layer = "output"
 			else:
 				layer = str(i.layerNum)
 			activation = ["no activation", "simple activation", "sigmoid", "relu", "sine", "hyperbolic tangent" ]
 
-			print "Node Number: " + str(i.nodeNumber) + " Layer: " + layer +  " Activation: " + activation[i.activationKey - 1]
+			print("Node Number: " + str(i.nodeNumber) + " Layer: " + layer +  " Activation: " + activation[i.activationKey - 1])
 		
-		print " " 
+		print(" ") 
 		
 		
-		print "CONNECTION LIST: "
+		print("CONNECTION LIST: ")
 		counter = 1
 		for x in self.connectionList:
-			print "Connection #" + str(counter) + ":" + " [" + str(x.nodeIn) + "]---(" + str(x.weight) + ")-->[" + str(x.nodeOut) + "]" 
-			print "Status: " + str(x.activationStatus)
+			print("Connection #" + str(counter) + ":" + " [" + str(x.nodeIn) + "]---(" + str(x.weight) + ")-->[" + str(x.nodeOut) + "]")
+			print("Status: " + str(x.activationStatus))
 			counter += 1
-			print " " 
+			print(" ") 
 		
 		
-		print "Number of Connections: " + str(len(self.connectionList))
+		print("Number of Connections: " + str(len(self.connectionList)))
 		return " " 
 	
 
@@ -131,7 +126,7 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 		elif(key == 6):
 			node.value = tanhAct(node.value)
 		else:
-			print("ERROR: ActivationKey exceeded current number of activations.")
+			print("ERROR: ActivationKey exceeded current number of activation functions.")
 
 	#evaluates the network based on given list of inputs
 	def evaluate(self, inputs):
@@ -140,15 +135,14 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 		outputs = []
 
 		for i in range(len(sortedNodes)):
-			nodeVal = 0 #used to get sum of connecting nodes value
+			nodeVal = 0 #used to get sum of connecting nodes values
 			node = sortedNodes[i]
 			if(node.layerNum == 0):
 				nodeVal = inputs[i]
 			for other in node.connectingNodes: #inputs will not have any connecting nodes listed
-				#self.inputNotCalcError(other[0])
-				nodeVal = nodeVal + (other[0].value * float(other[1]));
-				#nodeVal =  nodeVal + node.connectingNodes[i][1]
-			#node.value = activate(node.activation, nodeVal)
+				
+				nodeVal += (other[0].value * float(other[1])); #multiplies node value by its weight
+				
 			node.value = nodeVal
 			self.activate(node)
 		
@@ -164,81 +158,85 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 
 	#creates node given hidden layer number and updates state of the network
 	def makeNode(self, hidden):
-		self.nodeList.append(Node(self.size, 0, hidden))
+		self.nodeList.append(Node(self.size, 0, hidden)) #nodeValue of 0 and layer given by "hidden" parameter
 		if(self.highestHidden < hidden):
 			self.highestHidden = hidden
-		print(hidden)
-		print(self.highestHidden)
+		#print(hidden)
+		#print(self.highestHidden)
 		self.size = self.size + 1
 
 
 	#node can only connect to a node with a higher layer number than its own
 	def validConnection(self, indIn, indOut):
 		#checks obvious bad connections first
-		connectionExists = False
+		goodConnection = True
 		for connection in self.connectionList:
 			if(connection.equalConnection(indIn, indOut)):
-				return False
+				goodConnection = False
+				return goodConnection
+		#ensures all connections go upward in term of layer number
 		if(self.nodeList[indIn].layerNum < self.nodeList[indOut].layerNum):
-			return True
-		return False
+			return goodConnection
+		else:
+			goodConnection = False
+			return goodConnection
 		
 		
 	#always use to append the connectionList
 	def makeConnection(self, indIn, indOut, weight):  #checks connection before creating 
-		
 		if(self.validConnection(indIn, indOut)):
-			self.connectionList.append(Connection(indIn, indOut, weight, True, self.globalInnovation))
+			self.connectionList.append(Connection(indIn, indOut, weight, True))
 			self.nodeList[indOut].connectingNodes.append([self.nodeList[indIn], weight])
-			self.globalInnovation = self.globalInnovation + 1
+			
 			
 				
 			
 	#uniform crossover for two genotypes, switches weight/activation functions of different connections (xpb is swap probability)
 	#should both parents be changed in this situation?
 	def crossover(self, parent2, xpb):
-		#only included for debugging purposes
+		crossover = False
 		if(not(len(self.connectionList) == len(parent2.connectionList))):
 			print("Connection lists are not same length - something is wrong!")
 		
 		else:
 			for i  in range(len(self.connectionList)):
-				if (random.random() >= xpb):
+				if (random.random() <= xpb):
 					#swaps weights of parents
 					w1 = parent2.connectionList[i].weight
 					self.connectionList[i].weight = w1
-					self.nodeList[connectionList[i].nodeOut].updateConnectingNodeWeights(self.nodeList[connectionList[i].nodeIn],w1) #updates connection data for evaluation
+					self.nodeList[self.connectionList[i].nodeOut].updateConnectingNodeWeights(self.nodeList[self.connectionList[i].nodeIn],w1) #updates connection data for evaluation
+					crossover = True
 					#parent2.connectionList[i].weight = w1
 
-				if(random.random() >= xpb):
-					#swaps activation functions of parents
-					key1 = self.nodeList[self.connectionList[i].nodeOut].activationKey
+				if(random.random() <= xpb):
+					#swaps activation functions of parents for both nodeIn and nodeOut of connection
+					#key1 = self.nodeList[self.connectionList[i].nodeOut].activationKey
 					self.nodeList[self.connectionList[i].nodeOut].activationKey = parent2.nodeList[parent2.connectionList[i].nodeOut].activationKey
-					#parent2.nodeList[parent2.connectionList[i].nodeOut].activationKey = key1
+					self.nodeList[self.connectionList[i].nodeIn].activationKey = parent2.nodeList[parent2.connectionList[i].nodeIn].activationKey
+					crossover = True
 
+			
 			return self
 
 	#mutates an individual weights in a genotype based on mutpb, returns true if mutation occurs
 	def weightMutate(self, mutpb):
 		# the upper limit of this mutation value should be the mutation probability of the evolutationary algorithm
-		# print(len(self.connectionList))
 		mutate = False
 		for i in self.connectionList:
-			if(random.random() < mutpb):
-				mutate = True
-				i.weight = i.weight + random.uniform(-mutpb, mutpb)
+			if(random.random() <= mutpb):
+				i.weight += random.uniform(-mutpb, mutpb)
 				self.nodeList[i.nodeOut].updateConnectingNodeWeights(self.nodeList[i.nodeIn], i.weight)
-				#print(self.connectionListi.nodeOut)
+				mutate = True
 		return mutate
 
 	#mutates the activation function used in an individual node based on mutpb returns true if mutation occurs
 	def activationMutate(self, mutpb):
 		mutate = False
 		for i in self.nodeList:
-			if (random.random() < mutpb):
+			#activation of outputs should not be changed from sigmoid
+			if (random.random() <= mutpb and not(i.layerNum == sys.maxsize)):
 				mutate = True
 				i.activationKey = random.choice([2,3,4,5,6])
-			# print(self.connectionListi.nodeOut)
 		return mutate
 
 
@@ -248,12 +246,10 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 	#d higher node
 	# layerNum is the layer the node being added will have
 	#returns true if node mutate is successful
-	#pre a,b < layerNum < doutList = [1,
+	#pre a.layerNum,b.layerNum < layerNum < d.layerNum
 	def nodeMutate(self, a, b,  d, layerNum):
 		self.nodeList.append(Node(self.size, 0, layerNum))
 
-		#should implement something to have this repeat if it breaks, adding complexity must occur when needed!!!!!
-		#this could be easily implemented with return values in the evolutionary code
 		validChange = self.validConnection(a, self.size) and self.validConnection(self.size,d) and self.validConnection(b, self.size)
 		if(validChange):
 			self.makeConnection(a, self.size, random.uniform(-2, 2)) #creates random weights so they are different for all individuals
@@ -263,6 +259,7 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 			if (layerNum > self.highestHidden):
 				self.highestHidden = layerNum
 		else:
+			#deletes node if the connections are bad - can try again without adding unconnected nodes
 			self.nodeList.pop()
 		return validChange
 
@@ -273,6 +270,7 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 			self.makeConnection(a, b, random.uniform(-2,2))
 		return validChange
 
+
 	#helper function to graph output of the CPPN
 	def graphOutput(self,outList, numX, numY):
 			if(not(len(outList) == numX * numY)):
@@ -280,20 +278,8 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 			else: 
 				plt.ion()
 				x = np.array(outList, copy = True)
-		    	fig,ax = plt.subplots()
-		    	im = ax.imshow(-x.reshape(numX, numY), cmap='gray', interpolation='none', norm=colors.Normalize(vmin=-1, vmax=0))
-		    	fig.show()
+				fig,ax = plt.subplots()
+				im = ax.imshow(-x.reshape(numX, numY), cmap='gray', interpolation='none', norm=colors.Normalize(vmin=-1, vmax=0))
+				fig.show()
 
 
-
-'''
-x = Genotype(2,3)
-outList = [1,0,1000,1]
-x.graphOutput(outList,2,2)
-raw_input("should have plotted test")
-print(x)
-outputs = x.evaluate([2,2])
-for z in outputs:
-	print z
-
-'''

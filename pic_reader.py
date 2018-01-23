@@ -29,6 +29,11 @@ def getPixels(filepath, numX,numY):
 	#resizes image to preferred size
 	im = im_tmp.resize(SIZE)
 
+	#im.show()
+	#raw_input("check image")
+
+	#im = im.rotate(90)
+
 	#list containing rgb tuples with original pixel values from image
 	og_pixels = list(im.getdata())
 
@@ -46,7 +51,6 @@ def graphImage(binPixels, numX, numY):
 	fig,ax = plt.subplots()
 	im = ax.imshow(-x.reshape(numX, numY), cmap='gray', interpolation='none', norm=colors.Normalize(vmin=-1, vmax=0))
 	fig.show()
-	raw_input("Here is your plot!")
+	input("Here is your plot!")
 
-px = getPixels('./Images/spring3.jpg',500,500)
-graphImage(px,500,500)
+	
