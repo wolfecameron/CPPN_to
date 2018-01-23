@@ -61,16 +61,16 @@ NUM_OUTPUTS = 1
 POP_SIZE = 100
 
 #probability crossover, mutatuion, number of generations
-cxpb , mutpb, ngen = .1, .1, 500
+cxpb , mutpb, ngen = .05, .05, 500
 
 #theshold for how little change signals a structural mutation
-STD_THRESHOLD = 35.0
+STD_THRESHOLD = 20.0
 
 #pressure for the population to select, higher pressure limits sample space more
 SEL_PRESSURE = .5
 
 #float value refers to how many generations the network can remain stagnant for before needing structural change
-STAG_GENS = 20.0
+STAG_GENS = 25.0
 
 generations = 0 #keeps track of number of generations that have passed 
 
@@ -95,7 +95,7 @@ def evalNetwork(g_param, gen):
 
 	diff = np.subtract(pixels_np,outputs_np)
 	
-	diff[diff>=.5] = 10 #changes all values greater than or equal to 1 to 10 (multiplies by 10)
+	diff[diff>=.5] = 4 #creates greater penalty for missing a pixel contained in the spring
 
 	diff = np.absolute(diff)
 	fitness = np.sum(diff)
