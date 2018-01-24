@@ -33,8 +33,9 @@ for y in range(0,numY):
         tup = (np.fabs(x - MEAN)/STD, np.fabs(y-MEAN)/STD)
         normIn.append(tup)
 
-
+#holds genome and outputs of final individuals
 finalGen = []
+finalInds = []
 	
 
 #finds the fittest genotype out of all fittest examples of a given structure
@@ -102,6 +103,7 @@ def evalNetwork(g_param, gen):
 
 	#appends final generation to a cached list for later observation
 	if(gen == ngen -1): 
+		finalInds.append(g_param)
 		finalGen.append(outputs)
 
 	return fitness,
@@ -200,8 +202,9 @@ def printResultsForwardFeed(bestInds):
 printResultsForwardFeed(bestInds)	
 
 check = 'y'
-for x in finalGen:
+for x,y in zip(finalGen,finalInds):
 	if(check == 'y'):
+		print(y)
 		graphImage(x, numX, numY)
 		check = input("would you like to keep viewing (y/n)?")
 	else: 

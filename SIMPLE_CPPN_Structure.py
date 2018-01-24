@@ -90,7 +90,7 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 				layer = "output"
 			else:
 				layer = str(i.layerNum)
-			activation = ["no activation", "simple activation", "sigmoid", "relu", "sine", "hyperbolic tangent" ]
+			activation = ["no activation", "simple activation", "sigmoid", "relu", "sine", "hyperbolic tangent" , "tangent", "gaussian", "log", "exponential", "square"]
 
 			print("Node Number: " + str(i.nodeNumber) + " Layer: " + layer +  " Activation: " + activation[i.activationKey - 1])
 		
@@ -246,7 +246,7 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 			#activation of outputs should not be changed from sigmoid
 			if (random.random() <= mutpb and not(i.layerNum == sys.maxsize)):
 				mutate = True
-				i.activationKey = random.choice([2,3,4,5,6])
+				i.activationKey = random.choice([2,3,4,5,6,7,8,9,10,11])
 		return mutate
 
 
@@ -292,4 +292,59 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 				im = ax.imshow(-x.reshape(numX, numY), cmap='gray', interpolation='none', norm=colors.Normalize(vmin=-1, vmax=0))
 				fig.show()
 
+	def graphGenotype(self):
+		possibleColors = ['#C0C0C0', '#000000', '#FF0000', '#FFFF00', '#808000', '#00FF00', '#00FFFF', '#0000FF','#FF00FF', '#008080', '#800080']
+		node_dict = {}
+		sort_nodes = sorted(self.nodeList, key = lambda x: x.layerNum)
+		layerCount = 0
+		nodeCount = 0
+		foundOutput = False
+		for x in sort_nodes:
+			
+			if(x.layerNum > layerCount and not foundOutput):
+				layerCount += 1
+				if(x.layerNum == sys.maxsize):
+					foundOutput = True
+			
+			if(layerCount not in list(node_dict.keys())):
+				node_dict[layerCount] = []
+			
+			#add current node to list of nodes at that layer
+			node_dict[layerCount].append(x)
+		
+		pointDict = {}
 
+		pointsX = []
+		pointsY = []
+		graphColors = []
+		keys = list(node_dict.keys())
+		for x in range(len(keys)):
+			nodeCounter = 0
+			for i in node_dict[keys[x]]:
+				#hashes all new points to existing node numbers
+				pointDict[i.nodeNumber] = (x,nodeCounter)
+				act = i.activationKey
+				graphColors.append(possibleColors[act-1])
+				pointsX.append(x)
+				pointsY.append(nodeCounter)
+				nodeCounter += 1
+
+		plt.scatter(pointsX,pointsY, color = graphColors, s = 400)
+		print(len(self.connectionList))
+		for x in self.connectionList:
+			currLine = []
+			inNode = x.nodeIn
+			outNode = x.nodeOut
+			point1 = pointDict[inNode]
+			point2 = pointDict[outNode]
+			xList = [point1[0], point2[0]]
+			yList = [point1[1], point2[1]]
+			plt.plot(xList,yList)
+
+		plt.show()
+		
+
+		
+
+x = Genotype(10,10)
+x.graphGenotype()

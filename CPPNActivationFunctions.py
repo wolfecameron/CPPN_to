@@ -37,10 +37,12 @@ def tanAct(x):
 
 #gaussian activation function
 def gauss(x):
-	return gaussian(x)
+	return x
 
 #logistic activation function
 def log(x):
+	if(x == 0):
+		return 0
 	return np.log(x)
 
 #exponential activation function
