@@ -2,10 +2,11 @@ import random
 import CPPNActivationFunctions as Funcs
 import numpy as np
 import sys
-from CPPNActivationFunctions import simpleAct, sig, noAct, relu, sinAct, tanhAct, tanAct, gauss, log, exp, square
+from CPPNActivationFunctions import noAct, simpleAct, sig, relu, sinAct, tanhAct, tanAct, gauss, log, exp, square
 import math
 import matplotlib.pyplot as plt
 from matplotlib import colors
+import matplotlib.patches as mpatches
 
 
 
@@ -318,6 +319,7 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 		pointsY = []
 		graphColors = []
 		keys = list(node_dict.keys())
+		#creates positions for all nodes on the graph
 		for x in range(len(keys)):
 			nodeCounter = 0
 			for i in node_dict[keys[x]]:
@@ -328,9 +330,9 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 				pointsX.append(x)
 				pointsY.append(nodeCounter)
 				nodeCounter += 1
-
+		
 		plt.scatter(pointsX,pointsY, color = graphColors, s = 400)
-		print(len(self.connectionList))
+		#illusrates all connections
 		for x in self.connectionList:
 			currLine = []
 			inNode = x.nodeIn
@@ -341,10 +343,18 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 			yList = [point1[1], point2[1]]
 			plt.plot(xList,yList)
 
+		#creates legend for activation colors
+		patch1 = mpatches.Patch(color='#C0C0C0', label='No Act')
+		patch2 = mpatches.Patch(color='#000000', label='Step')
+		patch3 = mpatches.Patch(color='#FF0000', label='Sigmoid')
+		patch4 = mpatches.Patch(color='#FFFF00', label='Relu')
+		patch5 = mpatches.Patch(color='#808000', label='Sine')
+		patch6 = mpatches.Patch(color='#00FF00', label='Tanh')
+		patch7 = mpatches.Patch(color='#00FFFF', label='Tan')
+		patch8 = mpatches.Patch(color='#0000FF', label='Gaussian')
+		patch9 = mpatches.Patch(color='#FF00FF', label='Logarithmic')
+		patch10 = mpatches.Patch(color='#008080', label='Exponential')
+		patch11 = mpatches.Patch(color='#800080', label='Sqaure')
+		plt.legend(handles=[patch1, patch2, patch3, patch4, patch5, patch6, patch7, patch8, patch9, patch10, patch11], loc='lower right')
 		plt.show()
 		
-
-		
-
-x = Genotype(10,10)
-x.graphGenotype()
