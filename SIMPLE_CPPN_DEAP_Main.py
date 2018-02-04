@@ -1,7 +1,7 @@
 import numpy as np
 from SIMPLE_CPPN_Structure import Genotype
 #from old_struct import Genotype, CPPN
-from SIMPLE_CPPN_DEAP_alg import var_algo, selectPop2
+from SIMPLE_CPPN_DEAP_alg import var_algo, selectPop3
 from CPPNActivationFunctions import simpleAct
 import math
 import csv
@@ -65,7 +65,7 @@ POP_SIZE = 100
 cxpb , mutpb, ngen = .05, .05, 500
 
 #theshold for how little change signals a structural mutation
-STD_THRESHOLD = 20.0
+STD_THRESHOLD = 35.0
 
 #pressure for the population to select, higher pressure limits sample space more
 SEL_PRESSURE = .5
@@ -79,7 +79,7 @@ generations = 0 #keeps track of number of generations that have passed
 structChange = False
 
 #gets pixel values from image for fitness evaluation
-pixels = getPixels('./Images/spring1.jpg', numX, numY)
+pixels = getPixels('./Images/test3.png', numX, numY)
 pixels_np = np.array(pixels, copy = True)
 
 #assigns fitness for different CPPN structures 
@@ -145,11 +145,10 @@ for g in range(ngen):
 	if(g > 0):
 		with open("or5.csv", 'a') as csvfile:
 			filewriter = csv.writer(csvfile, delimiter=',')
-
 			filewriter.writerow([generations, genFitness/float(POP_SIZE), 'NumNodes: ' + str(len(pop[0].nodeList)), 'NumConnect: ' + str(len(pop[0].connectionList)), 'True' if(structChange) else 'False'])
 	genFitness = 0		
 	#updates population
-	pop = selectPop2(pop, SEL_PRESSURE)
+	pop = selectPop3(pop)
 	pop = var_algo(pop,cxpb, mutpb, structChange) #runs the evolutionary algorithm, returns offspring
 
 	#best individual of current population set to first individual
@@ -204,8 +203,10 @@ printResultsForwardFeed(bestInds)
 check = 'y'
 for x,y in zip(finalGen,finalInds):
 	if(check == 'y'):
-		print(y)
 		graphImage(x, numX, numY)
+		#input("Here is the individual.")
+		y.graphGenotype()
+		input("Here is the network structure of this individual.")
 		check = input("would you like to keep viewing (y/n)?")
 	else: 
 		break
@@ -216,12 +217,14 @@ keys = bestInds.keys()
 for i in keys:
 	if(check == 'y'):
 		ind = bestInds[i]
-		print(ind)
 		outputs = []
 		for x in range(len(normIn)):
 			outputs.append(ind.evaluate([normIn[x][0],normIn[x][1]])[0])
 		
 		graphImage(outputs,numX,numY)
+		#input("Here is the individual.")
+		ind.graphGenotype()
+		input("Here is the network structure of this individual.")
 		check = input("keep viewing? (y/n)")
 	else:
 		break

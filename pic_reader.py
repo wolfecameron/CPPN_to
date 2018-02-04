@@ -30,7 +30,7 @@ def getPixels(filepath, numX,numY):
 	im = im_tmp.resize(SIZE)
 
 	#im.show()
-	#raw_input("check image")
+	#input("check image")
 
 	#im = im.rotate(90)
 

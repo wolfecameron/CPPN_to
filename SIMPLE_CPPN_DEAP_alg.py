@@ -17,9 +17,6 @@ def var_algo(population, cxpb, mutpb, structChange):
 			successLink = linkMutatePop(offspring, randStartNode, randEndNode)
 			if(not successLink):
 				nodeMutatePop(offspring, randStartNode,randEndNode)
-				#print("NODE MUTATE")
-			#else:
-				#print("LINK MUTATE")
 		
 		if(choice == 2):
 			nodeMutatePop(offspring, randStartNode, randEndNode)
@@ -152,6 +149,41 @@ def selectPop2(population, selectPressure):
 		newPop.append(copy.deepcopy(selRand(newPop))) 
 	
 	return newPop
+
+#runs a binary selection algorithm
+#gives every indiviudal in the population 2 chances to compete
+#pre: population must have an even number of individuals
+#returns new populations of selected individuals, same size as original population
+#NOTE: fitness being minimized
+def selectPop3(population):
+	#stores all selected individuals
+	newPop = []
+	#shuffles population and allows all indiduals to compete twice (in each list)
+	#with genome next to it in the list
+	#two genomes compete at one time, best one appended to new pop
+	pop1 = copy.deepcopy(population)
+	pop2 = copy.deepcopy(population)
+	random.shuffle(pop1)
+	random.shuffle(pop2)
+	#performs binary selection on first copy of population
+	while(len(pop1) > 0):
+		ind1 = pop1.pop()
+		ind2 = pop1.pop()
+		if(ind1.fitness < ind2.fitness):
+			newPop.append(ind1)
+		else:
+			newPop.append(ind2)
+	#performs binary selection on second copy of population
+	while(len(pop2) > 0):
+		ind1 = pop2.pop()
+		ind2 = pop2.pop()
+		if(ind1.fitness < ind2.fitness):
+			newPop.append(ind1)
+		else:
+			newPop.append(ind2)
+
+	return newPop
+
 
 
 

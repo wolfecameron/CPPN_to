@@ -40,8 +40,9 @@ def gauss(x):
 	return x
 
 #logistic activation function
+#pre: x > 0
 def log(x):
-	if(x == 0):
+	if(not (x > 0)):
 		return 0
 	return np.log(x)
 
