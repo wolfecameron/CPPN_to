@@ -9,8 +9,8 @@ from pic_reader import getPixels, convertBinary, graphImage
 import matplotlib.pyplot as plt
 
 #stores the size of the structure/image
-numX = 50
-numY = 50
+numX = 100
+numY = 100
 
 clearInput = True if(input("Would you like to clear contents of csvfile? (y/n)") == 'y') else False
 
@@ -62,16 +62,19 @@ NUM_OUTPUTS = 1
 POP_SIZE = 100
 
 #probability crossover, mutatuion, number of generations
-cxpb , mutpb, ngen = .05, .05, 500
+cxpb , mutpb, ngen = .1, .1, 500
 
 #theshold for how little change signals a structural mutation
-STD_THRESHOLD = 35.0
+STD_THRESHOLD = 0.0
+#boolean value for if initial threshold value has yet been set
+threshold_set = False
+
 
 #pressure for the population to select, higher pressure limits sample space more
 SEL_PRESSURE = .5
 
 #float value refers to how many generations the network can remain stagnant for before needing structural change
-STAG_GENS = 25.0
+STAG_GENS = 40.0
 
 generations = 0 #keeps track of number of generations that have passed 
 
@@ -79,7 +82,7 @@ generations = 0 #keeps track of number of generations that have passed
 structChange = False
 
 #gets pixel values from image for fitness evaluation
-pixels = getPixels('./Images/test3.png', numX, numY)
+pixels = getPixels('./Images/spring1.jpg', numX, numY)
 pixels_np = np.array(pixels, copy = True)
 
 #assigns fitness for different CPPN structures 
@@ -137,6 +140,7 @@ AVG_FITNESSES = []
 
 #keeps track of average fitness for last 20 generations
 fitnessTrail = []
+stagnationCounter = 0
 
 #runs evolutionary algorithm
 for g in range(ngen):
@@ -170,6 +174,12 @@ for g in range(ngen):
 	
 	structChange = False
 
+	#set initial value for STD_threshold after 20th generation
+	if(not threshold_set and g==STAG_GENS - 1):
+		a = getSTDTrailingFitness(fitnessTrail)
+		STD_threshold = a*.1
+		print("STD threshold has been set to: " + str(STD_threshold))
+
 	if(len(fitnessTrail) < STAG_GENS):
 		fitnessTrail.append(genFitness/float(POP_SIZE))
 	else:
@@ -181,8 +191,14 @@ for g in range(ngen):
 				print("Structural change was added at generation " + str(g))
 				fitnessTrail = []
 		else:
+			stagnationCounter += 1
 			del fitnessTrail[0] #deletes first element in list
 			fitnessTrail.append(genFitness/float(POP_SIZE))
+			if(stagnationCounter >= 60):
+				#increase the threshold slightly
+				STD_THRESHOLD = (a + STD_THRESHOLD)/2
+				print("STD_THRESHOLD WAS INCREASED")
+				stagnationCounter = 0
 			
 
 
