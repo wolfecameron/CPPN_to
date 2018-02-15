@@ -16,11 +16,11 @@ import topopt
 
 
 # NEAT implementation of topological optimization
-POPSIZE = 50
-NGEN = 150
-numX = 30
-numY = 10
-volfrac = 0.4
+POPSIZE = 15
+NGEN = 100
+numX = 60
+numY = 20
+volfrac = 0.5
 inputs = []
 
 
@@ -30,17 +30,17 @@ inputs = []
 for x in range(1, numX + 1):
     inputs.append(x)
 
-tmp = np.array(inputs, copy = True)
+tmp = np.array(inputs, copy=True)
 MEAN = np.mean(tmp)
 STD = np.std(tmp)
 
-#list of normalized inputs
-normIn = [] 
+# list of normalized inputs
+normIn = []
 
-#creates input list with normalized vectors
-for y in range(0,numY):
-    for x in range(0,numX):
-        tup = (np.fabs(x - MEAN)/STD, np.fabs(y-MEAN)/STD)
+# creates input list with normalized vectors
+for y in range(0, numY):
+    for x in range(0, numX):
+        tup = (np.fabs(x - MEAN) / STD, np.fabs(y - MEAN) / STD)
         normIn.append(tup)
 
 
@@ -49,7 +49,6 @@ top_outputs = []
 AVG_FITNESSES = []
 INDIVIDUALS = []
 NETS = []
-
 
 
 def sigmoid_act(x):
@@ -78,9 +77,9 @@ def eval_genomes(genomes, config):
         for z in range(len(normIn)):
             # always passes output through sigmoid
             x = sigmoid_act(net.activate(normIn[z])[0])
-            #must make x either 1 or 0
-            #if it can be .5 the program will yield a completely grey solution
-            if(x>=.5):
+            # must make x either 1 or 0
+            # if it can be .5 the program will yield a completely grey solution
+            if(x >= .5):
                 x = 1
             else:
                 x = 0
@@ -88,8 +87,8 @@ def eval_genomes(genomes, config):
 
         # initialized as a regular list and copied as a numpy array to resize
         x = np.array(outList, copy=True)
-        #calculate the amount of material used
-        real_volfrac = np.sum(x)/len(x)
+        # calculate the amount of material used
+        real_volfrac = np.sum(x) / len(x)
         INDIVIDUALS.append(x)
         # x = x.reshape((numX, numY))
         # fitness function imported from topopt.py file
@@ -98,24 +97,19 @@ def eval_genomes(genomes, config):
 
         avgFitness = avgFitness + fit  # keeps track of average fitness for each generation
         counter = counter + 1
-        #penalize the genome if it uses too much material or too little material
-        #penalty is scaled based on how for away it is from desired volfrac
-        if(real_volfrac == 1 or real_volfrac == 0):
-            #attempts to eliminate empty solutions
-            genome.fitness -= sys.maxint
-        elif(real_volfrac > volfrac):
+        # penalize the genome if it uses too much material or too little material
+        # penalty is scaled based on how for away it is from desired volfrac
+        if(real_volfrac > volfrac):
             penalty = real_volfrac - volfrac
-            genome.fitness -= (1+penalty)*fit
+            genome.fitness += 100 * (1 + penalty) * fit
         elif(real_volfrac < .2):
-            #cannot let this solution have objective of 0 because it will become optimal
-            #must add something to fitness because multiplying 0 by penalty still yields 0 
+            # cannot let this solution have objective of 0 because it will become optimal
+            # must add something to fitness because multiplying 0 by penalty still yields 0
             penalty = np.fabs(real_volfrac - volfrac)
-            genome.fitness -= (1+penalty)*fit + 1000*(1 + penalty) 
+            genome.fitness += (1 + penalty) * fit + 100000 * (1 + penalty)
         else:
-            #just use normal fitness if solution is within volfrac
-            genome.fitness -= fit
-
-            
+            # just use normal fitness if solution is within volfrac
+            genome.fitness += fit
 
     AVG_FITNESSES.append(float(avgFitness) / counter)
 
@@ -147,7 +141,7 @@ print('\nNet Info:\n{!s}'.format(winner))
 fullOutput = []
 # this loop doesnt work because every evaluation needs the full
 for xi in normIn:
-    fullOutput.append( 1 if((sigmoid_act(winner_net.activate(xi)[0])) >= .5) else 0)
+    fullOutput.append(1 if((sigmoid_act(winner_net.activate(xi)[0])) >= .5) else 0)
 
 print(fullOutput)
 raw_input("Enter anything to plot result")
@@ -162,9 +156,9 @@ fig.show()
 raw_input("Begin viewing final generation")
 
 
-#check variable used to stop viewing final generation
-#often don't want to look at every individual because there are so many
-check = 'a' 
+# check variable used to stop viewing final generation
+# often don't want to look at every individual because there are so many
+check = 'a'
 
 for i in range(NGEN * POPSIZE - POPSIZE, NGEN * POPSIZE):
     if(not(check == 'z')):
@@ -172,9 +166,9 @@ for i in range(NGEN * POPSIZE - POPSIZE, NGEN * POPSIZE):
         fig, ax = plt.subplots()
         x = INDIVIDUALS[i]
         im = ax.imshow(-x.reshape(numX, numY).T, cmap='gray',
-                   interpolation='none', norm=colors.Normalize(vmin=-1, vmax=0))
+                       interpolation='none', norm=colors.Normalize(vmin=-1, vmax=0))
         fig.show()
-        net =NETS[i]
+        net = NETS[i]
         print('\nNet Info:\n{!s}'.format(net))
         check = raw_input("Hit anything to view next individual. Enter 'z' to stop viewing.")
 

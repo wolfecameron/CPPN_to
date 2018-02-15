@@ -1,9 +1,9 @@
 #--- parameters for the TopOpt experiment ---#
 
 [NEAT]
-fitness_criterion     = max
+fitness_criterion     = min
 fitness_threshold     = 0
-pop_size              = 50
+pop_size              = 15
 reset_on_extinction   = False
 no_fitness_termination = True
 
@@ -72,7 +72,7 @@ weight_mutate_rate      = 0.1
 weight_replace_rate     = 0.1
 
 [DefaultSpeciesSet]
-compatibility_threshold = 3.0
+compatibility_threshold = 1.5
 
 [DefaultStagnation]
 species_fitness_func = max
