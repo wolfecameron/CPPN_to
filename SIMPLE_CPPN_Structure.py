@@ -8,10 +8,12 @@ import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 from matplotlib import colors
+from matplotlib.figure import Figure
 import matplotlib.patches as mpatches
 from tkinter import *
 import matplotlib.animation as animation
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+from tk_cppn import main
 
 
 
@@ -369,6 +371,9 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 	def playground(self, numX, numY):
 		self.graphGenotype()
 
+		f = Figure(figsize=(5,5),dpi=100)
+		a = f.add_subplot(111) #one-by-one and it is chart number one
+
 		with open("genome_info.txt", "w") as genome_file:
 			genome_file.write("NODES\n")
 			for x in self.nodeList:
@@ -382,62 +387,10 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 				genome_file.write("Weight: " + str(x.weight) + "\n")
 				num_connection += 1
 
-
-		"""CREATES INPUTS TO RUN NETWORK"""
-		inputs = []
-		#creates input values for CPPN for spring optimization
-		for x in range(1, numX + 1):
-			inputs.append(x)
-
-		tmp = np.array(inputs, copy = True)
-		MEAN = np.mean(tmp)
-		STD = np.std(tmp)
-
-		#list of normalized inputs
-		normIn = [] 
-
-		#creates input list with normalized vectors, values of input are of form (x,y) in a list of tuples
-		for y in range(0,numY):
-			for x in range(0,numX):
-				tup = (np.fabs(x - MEAN)/STD, np.fabs(y-MEAN)/STD)
-				normIn.append(tup)
-
 		
-		root = Tk()
-
-		pullData = open("genome_info.txt", "r").read()
-		dataList = pullData.split("\n")
-		foundConnections = False
-		nodeCounter = 0
-		connectionCounter = 0
-
-		for line in dataList:
-			if(not foundConnections and "Activation" in line):
-				activationValue = int(line[12:])
-				#print(activationValue)
-				self.nodeList[nodeCounter].activationKey = activationValue
-				nodeCounter += 1
-			if(foundConnections and "Weight" in line):
-				weightValue = float(line[8:])
-				#print(weightValue)
-				self.connectionList[connectionCounter].weight 
-				connectionCounter += 1
-
-			elif("CONNECTIONS" in line):
-				foundConnections = True
-
-		output_list = []
-		for x in range(len(normIn)):
-			output_list.append(self.evaluate([normIn[x][0],normIn[x][1]])[0])
-		plt.ion()
-		x = np.array(output_list, copy = True)
-		fig,ax = plt.subplots()
-		im = ax.imshow(-x.reshape(numX, numY), cmap='gray', interpolation='none', norm=colors.Normalize(vmin=-1, vmax=0))
-		canvas = FigureCanvasTkAgg(fig, root)
-		canvas.show()
-		canvas.get_tk_widget().pack(side = TOP, fill = BOTH, expand=True)
+		#initiates GUI
+		main(self,numX,numY, f , a)
 		
-		root.mainloop()
 
 
 
