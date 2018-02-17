@@ -62,7 +62,7 @@ NUM_OUTPUTS = 1
 POP_SIZE = 100
 
 #probability crossover, mutatuion, number of generations
-cxpb , mutpb, ngen = .1, .1, 500
+cxpb , mutpb, ngen = .05, .1, 1000
 
 #theshold for how little change signals a structural mutation
 STD_THRESHOLD = 0.0
@@ -220,7 +220,6 @@ check = 'y'
 for x,y in zip(finalGen,finalInds):
 	if(check == 'y'):
 		graphImage(x, numX, numY)
-		#input("Here is the individual.")
 		y.graphGenotype()
 		input("Here is the network structure of this individual.")
 		check = input("would you like to keep viewing (y/n)?")
@@ -237,10 +236,9 @@ for i in keys:
 		for x in range(len(normIn)):
 			outputs.append(ind.evaluate([normIn[x][0],normIn[x][1]])[0])
 		
-		graphImage(outputs,numX,numY)
-		#input("Here is the individual.")
-		ind.graphGenotype()
-		input("Here is the network structure of this individual.")
+		#playground shows output of individual and allows you to alter properties of the CPPN
+		#CPPN output and genotype graph are updated in real time as you change features
+		ind.playground(numX,numY)
 		check = input("keep viewing? (y/n)")
 	else:
 		break

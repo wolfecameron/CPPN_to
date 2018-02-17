@@ -7,12 +7,10 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 import matplotlib.animation as animation
 
+
+#define font type for GUI
 LARGE_FONT = ("Verdana", 12)
 
-
-
-#f = Figure(figsize=(5,5),dpi=100)
-#a = f.add_subplot(111) #one-by-one and it is chart number one
 
 def animate(i, genome, numX, numY, f, a):
     pullData = open("genome_info.txt", "r").read()
@@ -42,7 +40,8 @@ def animate(i, genome, numX, numY, f, a):
 
         elif("CONNECTIONS" in line):
             foundConnections = True
-    
+    # graphs genotype each time it is updated so changes can be observed
+    genome.graphGenotype()
     """CREATES LIST OF INPUTS TO RUN NETWORK"""
     inputs = []
     #creates input values for CPPN for spring optimization

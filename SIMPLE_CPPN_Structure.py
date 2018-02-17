@@ -366,15 +366,14 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 		plt.show()
 
 
+	#writes all info from a genome into a text file so that it can be used later
+	def writeGenomeInfo(self, filenumber):
+		if(filenumber > 0):
+			filename = "genome_info" + str(filenumber) + ".txt"
+		else:
+			filename = "genome_info.txt"
 
-
-	def playground(self, numX, numY):
-		self.graphGenotype()
-
-		f = Figure(figsize=(5,5),dpi=100)
-		a = f.add_subplot(111) #one-by-one and it is chart number one
-
-		with open("genome_info.txt", "w") as genome_file:
+		with open(filename, "w") as genome_file:
 			genome_file.write("NODES\n")
 			for x in self.nodeList:
 				genome_file.write("Node #" + str(x.nodeNumber) + ", Node Layer: " + str(x.layerNum) + "\n")
@@ -387,18 +386,18 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 				genome_file.write("Weight: " + str(x.weight) + "\n")
 				num_connection += 1
 
+	def playground(self, numX, numY):
+		self.graphGenotype()
+
+		f = Figure(figsize=(5,5),dpi=100)
+		a = f.add_subplot(111) #one-by-one and it is chart number one
+
+		#writes all info from current file into a genome so it can be used for animation and real time updating of the CPPN
+		self.writeGenomeInfo(0)
+
 		
 		#initiates GUI
 		main(self,numX,numY, f , a)
 		
-
-
-
-
-
-
-x = Genotype(2,1)
-x.playground(50,50)
-
 
 		
