@@ -62,7 +62,7 @@ NUM_OUTPUTS = 1
 POP_SIZE = 100
 
 #probability crossover, mutatuion, number of generations
-cxpb , mutpb, ngen = .05, .1, 1000
+cxpb , mutpb, ngen = .05, .1, 3
 
 #theshold for how little change signals a structural mutation
 STD_THRESHOLD = 0.0

@@ -1,12 +1,12 @@
 NODES
 Node #0, Node Layer: 0
-Activation: 2
+Activation: 11
 Node #1, Node Layer: 0
 Activation: 9
 Node #2, Node Layer: 9223372036854775807
 Activation: 2
 CONNECTIONS
 Connection #: 0, NodeIn: 0, NodeOut: 2
-Weight: 0.5338107411751698
+Weight: 0.471682203464757
 Connection #: 1, NodeIn: 1, NodeOut: 2
-Weight: -0.6772409667432089
+Weight: -0.8481759354706857
