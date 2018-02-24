@@ -362,7 +362,7 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 		patch9 = mpatches.Patch(color='#FF00FF', label='Logarithmic')
 		patch10 = mpatches.Patch(color='#008080', label='Exponential')
 		patch11 = mpatches.Patch(color='#800080', label='Sqaure')
-		plt.legend(handles=[patch1, patch2, patch3, patch4, patch5, patch6, patch7, patch8, patch9, patch10, patch11], loc='lower right')
+		plt.legend(handles=[patch1, patch2, patch3, patch4, patch5, patch6, patch7, patch8, patch9, patch10, patch11], loc='upper right')
 		plt.show()
 
 

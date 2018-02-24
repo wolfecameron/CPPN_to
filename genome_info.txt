@@ -5,8 +5,16 @@ Node #1, Node Layer: 0
 Activation: 9
 Node #2, Node Layer: 9223372036854775807
 Activation: 2
+Node #3, Node Layer: 1
+Activation: 2
 CONNECTIONS
 Connection #: 0, NodeIn: 0, NodeOut: 2
-Weight: 0.471682203464757
+Weight: -0.409745214246776
 Connection #: 1, NodeIn: 1, NodeOut: 2
-Weight: -0.8481759354706857
+Weight: -0.4943833593270485
+Connection #: 2, NodeIn: 1, NodeOut: 3
+Weight: 1.2088713759928509
+Connection #: 3, NodeIn: 0, NodeOut: 3
+Weight: 0.282383639175017367
+Connection #: 4, NodeIn: 3, NodeOut: 2
+Weight: 0.616143537654462
