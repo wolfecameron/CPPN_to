@@ -8,7 +8,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 import matplotlib.animation as animation
 
 
-#define font type for GUI
+#define font normIntype for GUI
 LARGE_FONT = ("Verdana", 12)
 
 
@@ -58,13 +58,13 @@ def animate(i, genome, numX, numY, f, a):
     #creates input list with normalized vectors, values of input are of form (x,y) in a list of tuples
     for y in range(0,numY):
         for x in range(0,numX):
-            tup = (np.fabs(x - MEAN)/STD, np.fabs(y-MEAN)/STD)
+            tup = ((x - MEAN)/STD, (y-MEAN)/STD, 1)
             normIn.append(tup)
     """*******************"""
 
     output_list = []
     for x in range(len(normIn)):
-        output_list.append(genome.evaluate([normIn[x][0],normIn[x][1]])[0])
+        output_list.append(genome.evaluate([normIn[x][0],normIn[x][1], normIn[x][2]])[0])
 
     #creates numpy array and resizes it for graphing
     g = np.array(output_list, copy=True)

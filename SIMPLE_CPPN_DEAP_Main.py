@@ -9,8 +9,11 @@ from pic_reader import getPixels, convertBinary, graphImage
 import matplotlib.pyplot as plt
 
 #stores the size of the structure/image
-numX = 100
-numY = 100
+numX = 50
+numY = 50
+MATERIAL_UPPER_BOUND = 0.4 #this can be pretty low because Springs do not take up much material	
+MATERIAL_LOWER_BOUND = 0.05
+MATERIAL_PENALIZATION_FACTOR = 2
 
 clearInput = True if(input("Would you like to clear contents of csvfile? (y/n)") == 'y') else False
 
@@ -30,7 +33,7 @@ normIn = []
 #creates input list with normalized vectors, values of input are of form (x,y) in a list of tuples
 for y in range(0,numY):
     for x in range(0,numX):
-        tup = (np.fabs(x - MEAN)/STD, np.fabs(y-MEAN)/STD)
+        tup = ((x - MEAN)/STD, (y-MEAN)/STD, 1) #include the 1 for bias
         normIn.append(tup)
 
 #holds genome and outputs of final individuals
@@ -57,12 +60,13 @@ def getSTDTrailingFitness(trailingFitness):
 
 
 #defined constants and hyperparameters
-NUM_INPUTS = 2
+NUM_INPUTS = 3
 NUM_OUTPUTS = 1
 POP_SIZE = 100
 
 #probability crossover, mutatuion, number of generations
-cxpb , mutpb, ngen = .05, .1, 750
+cxpb , mutpb, ngen = .1, .2, 2500
+
 
 #theshold for how little change signals a structural mutation
 STD_THRESHOLD = 0.0
@@ -74,7 +78,7 @@ threshold_set = False
 SEL_PRESSURE = .5
 
 #float value refers to how many generations the network can remain stagnant for before needing structural change
-STAG_GENS = 40.0
+STAG_GENS = 25.0
 
 generations = 0 #keeps track of number of generations that have passed 
 
@@ -82,7 +86,7 @@ generations = 0 #keeps track of number of generations that have passed
 structChange = False
 
 #gets pixel values from image for fitness evaluation
-pixels = getPixels('./Images/spring1.jpg', numX, numY)
+pixels = getPixels('./Images/spring7.png', numX, numY)
 pixels_np = np.array(pixels, copy = True)
 
 #assigns fitness for different CPPN structures 
@@ -90,19 +94,27 @@ def evalNetwork(g_param, gen):
 	#fitness should be minimized to eliminate difference between CPPN output and existing picture
 	fitness = 0
 
+	#run network and get outputs
 	outputs = []
 	for x in range(len(normIn)):
-
-		outputs.append(g_param.evaluate([normIn[x][0],normIn[x][1]])[0])
+		outputs.append(g_param.evaluate([normIn[x][0],normIn[x][1],normIn[x][2]])[0])
 	
 	outputs_np = np.array(outputs, copy = True)
 
 	diff = np.subtract(pixels_np,outputs_np)
 	
-	diff[diff>=.5] = 4 #creates greater penalty for missing a pixel contained in the spring
+	diff[diff>=.5] *= 4 #creates greater penalty for missing a pixel contained in the spring
 
 	diff = np.absolute(diff)
 	fitness = np.sum(diff)
+
+	#penalizes network for finding all black/all white solutions
+	#adds material constraint
+	material_used = np.sum(outputs_np)
+	if(material_used < numX*numY*MATERIAL_LOWER_BOUND):
+		fitness *= MATERIAL_PENALIZATION_FACTOR
+	elif(material_used > numX*numY*MATERIAL_UPPER_BOUND):
+		fitness *= MATERIAL_PENALIZATION_FACTOR
 
 	#appends final generation to a cached list for later observation
 	if(gen == ngen -1): 
@@ -177,7 +189,7 @@ for g in range(ngen):
 	#set initial value for STD_threshold after 20th generation
 	if(not threshold_set and g==STAG_GENS - 1):
 		a = getSTDTrailingFitness(fitnessTrail)
-		STD_threshold = a*.1
+		STD_threshold = a*.25
 		print("STD threshold has been set to: " + str(STD_threshold))
 
 	if(len(fitnessTrail) < STAG_GENS):
@@ -210,7 +222,7 @@ def printResultsForwardFeed(bestInds):
 	genotype = getFittestKey(bestInds)
 	outputs = []
 	for x in range(len(normIn)):
-		outputs.append(genotype.evaluate([normIn[x][0],normIn[x][1]])[0])
+		outputs.append(genotype.evaluate([normIn[x][0],normIn[x][1],normIn[x][2]])[0])
 	graphImage(outputs, numX, numY)
 
 #print(getFittestKey(bestInds).__str__())
@@ -228,17 +240,24 @@ for x,y in zip(finalGen,finalInds):
 
 print("Here are the best individuals of each structure.")
 check = 'y'
-keys = bestInds.keys()
-for i in keys:
+keys = list(bestInds.keys())
+#go through best individuals backwards so you start with the most recent
+for i in reversed(keys):
 	if(check == 'y'):
 		ind = bestInds[i]
 		outputs = []
 		for x in range(len(normIn)):
-			outputs.append(ind.evaluate([normIn[x][0],normIn[x][1]])[0])
+			outputs.append(ind.evaluate([normIn[x][0],normIn[x][1],normIn[x][2]])[0])
 		
 		#playground shows output of individual and allows you to alter properties of the CPPN
 		#CPPN output and genotype graph are updated in real time as you change features
-		ind.playground(numX,numY)
+		#the tk playground sometimes throws a runtime error when quitting the window on linux, 
+		#try except block included to avoid this issue
+		try:
+			ind.playground(numX,numY)
+		except:
+			print("Whoops, something went wrong in the playground!")
+
 		check = input("keep viewing? (y/n)")
 	else:
 		break

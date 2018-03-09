@@ -25,7 +25,7 @@ class Node:  # stores the number of total nodes and the type (input,hidden,outpu
 		self.nodeValue = nodeValue  # all node values are 0 until CPPN is evaluated besides the inputs, these values are
 		self.layerNum = layerNum  # input, output, or hidden
 		self.connectingNodes = []  # stores a list of numbers for the nodes it connects to, used to avoid recurring connections
-		self.activationKey = random.choice([2, 3, 4, 5, 6, 7, 8, 9, 10, 11]) #denotes which activation function is used by the node
+		self.activationKey = random.choice([3]) #random.choice([2, 3, 4, 5, 6, 7, 8, 9, 10, 11]) #denotes which activation function is used by the node
 
 	def updateConnectingNodeWeights(self, node, weight):
 		for nodeData in self.connectingNodes:
@@ -254,7 +254,7 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 			#activation of outputs should not be changed from sigmoid
 			if (random.random() <= mutpb and not(i.layerNum == sys.maxsize)):
 				mutate = True
-				i.activationKey = random.choice([2,3,4,5,6,7,8,9,10,11])
+				i.activationKey = random.choice([3])#random.choice([2,3,4,5,6,7,8,9,10,11])
 		return mutate
 
 

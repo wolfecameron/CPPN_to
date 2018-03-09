@@ -5,9 +5,12 @@ from matplotlib import colors
 
 #converts rgb pixel values to binary (1 == black, 0 == white)
 def convertBinary(tupList):
+	BINARY_THRESHOLD = 200
 	binList = []
 	for x in tupList:
-		if(x[0] > 155):
+		#value of 255 is white, value of 0 is black
+		# 255 -> 0, 0 -> 1
+		if(x[0] > BINARY_THRESHOLD):
 			binList.append(0)
 		else:
 			binList.append(1)
@@ -28,6 +31,7 @@ def getPixels(filepath, numX,numY):
 
 	#resizes image to preferred size
 	im = im_tmp.resize(SIZE)
+	
 
 	#im.show()
 	#input("check image")
