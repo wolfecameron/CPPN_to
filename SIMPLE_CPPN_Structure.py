@@ -14,9 +14,14 @@ from tkinter import *
 import matplotlib.animation as animation
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 from tk_cppn import main
+import os
 
 
-
+# global variable for genome construction
+# decides whether to create genome from scratch or pull data from file
+# second global variable holds filepath to genome info
+PULL_DATA = False
+GENOME_FILE = "/home/wolfecameron/Desktop/fullGenome3"
 
 class Node:  # stores the number of total nodes and the type (input,hidden,output) of each node
 	def __init__(self, nodeNumber, nodeValue, layerNum):
@@ -50,7 +55,8 @@ class Connection:  # stores node connections and corresponding weights, may be a
 
 
 class Genotype:  # Genotype class contains all mutation/evolutionary method/all info about network structure
-
+	
+	# pull data is the boolean argument that decides whether to pull data from file or create from scratch
 	def __init__(self, numIn, numOut):  # takes argument for number of input nodes and output nodes in CPPN
 
 		# creates properties to contain all nodes/connections/information for each genotype
@@ -61,28 +67,51 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 		self.connectionList = []  # stores information for all conections within the neural network
 		self.size = numIn + numOut  # stores number of total nodes in the network
 		self.fitness = 0
-		self.highestHidden = 0 #highest hidden layer currently in netwoek
+		self.highestHidden = 0 #highest hidden layer currently in network
 
-		# node creation Loop
-		for i in range(0, numIn):
-			# nodes initialized with value of zero, values created later
-			self.nodeList.append(Node(i, 0, 0))  # creates input nodes (number of inputs is parameterized)
-		
-		#layer number of outputs is sys.maxsize to always keep it at the end of the list
-		for x in range(numOut):
-			self.nodeList.append(Node(numIn + x, 0, sys.maxsize))  # networks start with input nodes and output nodes (no hidden) to maximize simplicity
-			self.nodeList[-1].activationKey = 2 #have to make sure this activation key never changes, must always be sigmoid
-		#self.nodeList.append(Node(numIn + 1, 0, "output"))  # creates output node
+		if(PULL_DATA):
+			self.size = 0
+			pullData = open(GENOME_FILE, "r").read()
+			dataList = pullData.split("\n")
+			pastNodes = False
+			# find all node data and append to node list
+			# then find all connection data and 
+			for d in dataList:
+				if("CONNECTIONS" in d):
+					pastNodes = True
+				elif(not pastNodes):
+					self.makeNode(int(d))
+					if(int(d) < sys.maxsize):
+						self.nodeList[self.size - 1].activationKey = 3
+					else:
+						self.nodeList[self.size - 1].activationKey = 2
 
-		# connectionList creation loop
-		#connects all inputs fully to outputs
-		for i in range(0, numIn):
+				elif(pastNodes and len(d) > 0):
+					splitData = d.split(',')
+					self.makeConnection(int(splitData[0]), int(splitData[1]), float(splitData[2]))
+
+		#regular constructor
+		else:
+			# node creation Loop
+			for i in range(0, numIn):
+				# nodes initialized with value of zero, values created later
+				self.nodeList.append(Node(i, 0, 0))  # creates input nodes (number of inputs is parameterized)
+			
+			#layer number of outputs is sys.maxsize to always keep it at the end of the list
 			for x in range(numOut):
-				weight = random.uniform(-1, 1)
-				# creates connections between the inputs and output (start w/ hidden nodes)
-				self.connectionList.append(Connection(i, self.numIn + x, weight, True))
-		
-				self.nodeList[self.numIn + x].connectingNodes.append([self.nodeList[i], weight])
+				self.nodeList.append(Node(numIn + x, 0, sys.maxsize))  # networks start with input nodes and output nodes (no hidden) to maximize simplicity
+				self.nodeList[-1].activationKey = 2 #have to make sure this activation key never changes, must always be sigmoid
+			#self.nodeList.append(Node(numIn + 1, 0, "output"))  # creates output node
+
+			# connectionList creation loop
+			#connects all inputs fully to outputs
+			for i in range(0, numIn):
+				for x in range(numOut):
+					weight = random.uniform(-1, 1)
+					# creates connections between the inputs and output (start w/ hidden nodes)
+					self.connectionList.append(Connection(i, self.numIn + x, weight, True))
+			
+					self.nodeList[self.numIn + x].connectingNodes.append([self.nodeList[i], weight])
 		
 		
 	#toString method for genotype: prints all information 
@@ -386,6 +415,28 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 				genome_file.write("Weight: " + str(x.weight) + "\n")
 				num_connection += 1
 
+	# function that writes all info needed to reconstruct CPPN to a file
+	# finds free filename and creates/writes to this file
+	# writes all info from genome, allows genome to be later reconstructed and examined
+	def writeFullGenomeInfo(self, filepath):
+		baseFileName = "fullGenome"
+		fileCounter = 0
+		# finds file name that is not already used to created file
+		while(os.path.isfile(filepath + "/" + baseFileName + str(fileCounter))):
+			fileCounter += 1
+		# holds string value for full filepath that is not being used
+		fullPath = filepath + "/" + baseFileName + str(fileCounter)
+		with open(fullPath, "w") as file:
+			# only needed parameter for adding a node to list is the layer number
+			for n in self.nodeList:
+				file.write(str(n.layerNum) + "\n")
+
+			file.write("CONNECTIONS\n")
+			# adding a connection required nodeIn, nodeOut, and weight
+			for c in self.connectionList:
+				file.write(str(c.nodeIn) + "," + str(c.nodeOut) + "," + str(c.weight) + "\n")
+
+	# main function that runs the playground for a instance of the genome
 	def playground(self, numX, numY):
 		self.graphGenotype()
 
@@ -400,4 +451,33 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 		main(self,numX,numY, f , a)
 		
 
-		
+if __name__ == '__main__':
+	# generate inputs
+	inputs = []
+	#creates input values for CPPN for spring optimization
+	for x in range(1, 50 + 1):
+		inputs.append(x)
+
+	tmp = np.array(inputs, copy = True)
+	MEAN = np.mean(tmp)
+	STD = np.std(tmp)
+
+	#list of normalized inputs
+	normIn = [] 
+
+	#creates input list with normalized vectors, values of input are of form (x,y) in a list of tuples
+	for y in range(0,50):
+		for x in range(0,50):
+			tup = ((x - MEAN)/STD, (y-MEAN)/STD, 1) #include the 1 for bias
+			normIn.append(tup)
+
+	curr = Genotype(2,1)
+
+	outputs = []
+	for x in range(len(normIn)):
+		outputs.append(curr.evaluate([normIn[x][0],normIn[x][1],normIn[x][2]])[0])
+
+
+	
+	curr.graphOutput(outputs,50,50)
+	input("Here it is")

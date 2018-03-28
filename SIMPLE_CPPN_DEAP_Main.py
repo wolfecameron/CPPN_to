@@ -48,7 +48,6 @@ def getFittestKey(bestInds):
 	for i in range(1, len(keys)):
 		if(fittest.fitness > bestInds[keys[i]].fitness):
 			fittest = bestInds[keys[i]]
-
 	return fittest
 
 
@@ -65,7 +64,7 @@ NUM_OUTPUTS = 1
 POP_SIZE = 100
 
 #probability crossover, mutatuion, number of generations
-cxpb , mutpb, ngen = .1, .2, 2500
+cxpb , mutpb, ngen = .1, .2, 2000
 
 
 #theshold for how little change signals a structural mutation
@@ -86,7 +85,7 @@ generations = 0 #keeps track of number of generations that have passed
 structChange = False
 
 #gets pixel values from image for fitness evaluation
-pixels = getPixels('./Images/spring7.png', numX, numY)
+pixels = getPixels('./Images/spring6.png', numX, numY)
 pixels_np = np.array(pixels, copy = True)
 
 #assigns fitness for different CPPN structures 
@@ -227,7 +226,7 @@ def printResultsForwardFeed(bestInds):
 
 #print(getFittestKey(bestInds).__str__())
 printResultsForwardFeed(bestInds)	
-
+'''
 check = 'y'
 for x,y in zip(finalGen,finalInds):
 	if(check == 'y'):
@@ -237,7 +236,7 @@ for x,y in zip(finalGen,finalInds):
 		check = input("would you like to keep viewing (y/n)?")
 	else: 
 		break
-
+'''
 print("Here are the best individuals of each structure.")
 check = 'y'
 keys = list(bestInds.keys())
@@ -248,7 +247,11 @@ for i in reversed(keys):
 		outputs = []
 		for x in range(len(normIn)):
 			outputs.append(ind.evaluate([normIn[x][0],normIn[x][1],normIn[x][2]])[0])
-		
+		graphImage(outputs,numX,numY)
+		save = input("Would you like to save this individual's genome? (y/n)") == 'y'
+		if(save):
+			#writes all information from genome to a .txt file on the desktop so that it can be loaded later for observation
+			ind.writeFullGenomeInfo("/home/wolfecameron/Desktop")
 		#playground shows output of individual and allows you to alter properties of the CPPN
 		#CPPN output and genotype graph are updated in real time as you change features
 		#the tk playground sometimes throws a runtime error when quitting the window on linux, 

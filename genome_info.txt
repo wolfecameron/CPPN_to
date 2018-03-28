@@ -15,390 +15,330 @@ Node #6, Node Layer: 3
 Activation: 3
 Node #7, Node Layer: 2
 Activation: 3
-Node #8, Node Layer: 1
+Node #8, Node Layer: 2
 Activation: 3
-Node #9, Node Layer: 4
+Node #9, Node Layer: 3
 Activation: 3
-Node #10, Node Layer: 3
+Node #10, Node Layer: 4
 Activation: 3
-Node #11, Node Layer: 1
+Node #11, Node Layer: 5
 Activation: 3
-Node #12, Node Layer: 1
+Node #12, Node Layer: 2
 Activation: 3
-Node #13, Node Layer: 2
+Node #13, Node Layer: 3
 Activation: 3
-Node #14, Node Layer: 2
+Node #14, Node Layer: 6
 Activation: 3
-Node #15, Node Layer: 3
+Node #15, Node Layer: 5
 Activation: 3
-Node #16, Node Layer: 2
+Node #16, Node Layer: 6
 Activation: 3
-Node #17, Node Layer: 4
+Node #17, Node Layer: 2
 Activation: 3
 Node #18, Node Layer: 4
 Activation: 3
-Node #19, Node Layer: 2
+Node #19, Node Layer: 3
 Activation: 3
-Node #20, Node Layer: 5
+Node #20, Node Layer: 4
 Activation: 3
-Node #21, Node Layer: 3
+Node #21, Node Layer: 1
 Activation: 3
-Node #22, Node Layer: 5
+Node #22, Node Layer: 6
 Activation: 3
-Node #23, Node Layer: 6
+Node #23, Node Layer: 7
 Activation: 3
-Node #24, Node Layer: 3
+Node #24, Node Layer: 5
 Activation: 3
-Node #25, Node Layer: 4
+Node #25, Node Layer: 5
 Activation: 3
-Node #26, Node Layer: 4
+Node #26, Node Layer: 3
 Activation: 3
-Node #27, Node Layer: 5
+Node #27, Node Layer: 8
 Activation: 3
-Node #28, Node Layer: 7
+Node #28, Node Layer: 4
 Activation: 3
-Node #29, Node Layer: 5
+Node #29, Node Layer: 8
 Activation: 3
-Node #30, Node Layer: 5
+Node #30, Node Layer: 9
 Activation: 3
-Node #31, Node Layer: 4
+Node #31, Node Layer: 7
 Activation: 3
-Node #32, Node Layer: 5
+Node #32, Node Layer: 7
 Activation: 3
-Node #33, Node Layer: 3
+Node #33, Node Layer: 6
 Activation: 3
-Node #34, Node Layer: 3
+Node #34, Node Layer: 5
 Activation: 3
 Node #35, Node Layer: 4
 Activation: 3
-Node #36, Node Layer: 3
+Node #36, Node Layer: 9
 Activation: 3
-Node #37, Node Layer: 4
+Node #37, Node Layer: 1
 Activation: 3
-Node #38, Node Layer: 4
+Node #38, Node Layer: 2
 Activation: 3
 Node #39, Node Layer: 7
 Activation: 3
-Node #40, Node Layer: 6
-Activation: 3
 CONNECTIONS
 Connection #: 0, NodeIn: 0, NodeOut: 3
-Weight: -4.292074893149107
+Weight: -3.806419268158211
 Connection #: 1, NodeIn: 1, NodeOut: 3
-Weight: -5.409190835534073
+Weight: 5.144654922052552
 Connection #: 2, NodeIn: 2, NodeOut: 3
-Weight: 3.5724769054576937
-Connection #: 3, NodeIn: 1, NodeOut: 4
-Weight: -0.14194152601963508
+Weight: 0.09767139821682541
+Connection #: 3, NodeIn: 0, NodeOut: 4
+Weight: -8.504590652840424
 Connection #: 4, NodeIn: 2, NodeOut: 4
-Weight: 0.16336079965197303
+Weight: 4.997192687140648
 Connection #: 5, NodeIn: 4, NodeOut: 3
-Weight: 0.30293504625286954
-Connection #: 6, NodeIn: 0, NodeOut: 5
-Weight: -7.80804324500833
-Connection #: 7, NodeIn: 1, NodeOut: 5
-Weight: 8.635114452846274
+Weight: -6.9910567502686
+Connection #: 6, NodeIn: 1, NodeOut: 5
+Weight: 1.9438062505121383
+Connection #: 7, NodeIn: 0, NodeOut: 5
+Weight: 7.497140776681992
 Connection #: 8, NodeIn: 5, NodeOut: 3
-Weight: 9.815474635114777
+Weight: -4.5634314053392595
 Connection #: 9, NodeIn: 2, NodeOut: 5
-Weight: -2.771130782763299
-Connection #: 10, NodeIn: 4, NodeOut: 5
-Weight: -0.37461304353405883
-Connection #: 11, NodeIn: 0, NodeOut: 6
-Weight: -2.786077980485982
-Connection #: 12, NodeIn: 4, NodeOut: 6
-Weight: -1.2534780266978873
-Connection #: 13, NodeIn: 6, NodeOut: 3
-Weight: 3.204980227210256
-Connection #: 14, NodeIn: 1, NodeOut: 6
-Weight: -1.5811285695684532
-Connection #: 15, NodeIn: 2, NodeOut: 6
-Weight: 4.010129765183119
-Connection #: 16, NodeIn: 0, NodeOut: 4
-Weight: -0.06842294809141725
-Connection #: 17, NodeIn: 0, NodeOut: 7
-Weight: -4.773724098504278
-Connection #: 18, NodeIn: 4, NodeOut: 7
-Weight: -1.0679090916086331
-Connection #: 19, NodeIn: 7, NodeOut: 6
-Weight: -0.9408977417852046
-Connection #: 20, NodeIn: 2, NodeOut: 8
-Weight: 3.762780111453842
-Connection #: 21, NodeIn: 0, NodeOut: 8
-Weight: -2.4540392639541158
-Connection #: 22, NodeIn: 8, NodeOut: 3
-Weight: 2.1129240253559
-Connection #: 23, NodeIn: 1, NodeOut: 8
-Weight: -2.716337226515432
-Connection #: 24, NodeIn: 5, NodeOut: 6
-Weight: -0.9558533117515662
-Connection #: 25, NodeIn: 8, NodeOut: 7
-Weight: 0.10367027709863229
-Connection #: 26, NodeIn: 8, NodeOut: 9
-Weight: -3.074538154911254
-Connection #: 27, NodeIn: 7, NodeOut: 9
-Weight: 0.9295782024962083
-Connection #: 28, NodeIn: 9, NodeOut: 3
-Weight: 1.8150270863099889
-Connection #: 29, NodeIn: 8, NodeOut: 5
-Weight: -2.939391978641038
-Connection #: 30, NodeIn: 2, NodeOut: 10
-Weight: -1.9231020053151577
-Connection #: 31, NodeIn: 5, NodeOut: 10
-Weight: -3.869931052268867
-Connection #: 32, NodeIn: 10, NodeOut: 3
-Weight: -1.4223373746148136
-Connection #: 33, NodeIn: 0, NodeOut: 11
-Weight: -3.6958974766279424
-Connection #: 34, NodeIn: 1, NodeOut: 11
-Weight: 7.0597100752834265
-Connection #: 35, NodeIn: 11, NodeOut: 3
-Weight: -1.6405866223333883
-Connection #: 36, NodeIn: 2, NodeOut: 12
-Weight: 4.079810620807878
-Connection #: 37, NodeIn: 1, NodeOut: 12
-Weight: -1.5903267703224309
-Connection #: 38, NodeIn: 12, NodeOut: 7
-Weight: -1.8355318071262627
-Connection #: 39, NodeIn: 2, NodeOut: 13
-Weight: -1.0196762044283627
-Connection #: 40, NodeIn: 0, NodeOut: 13
-Weight: 2.8925393092312235
-Connection #: 41, NodeIn: 13, NodeOut: 9
-Weight: -2.3733232902978463
-Connection #: 42, NodeIn: 11, NodeOut: 10
-Weight: 3.6285597375236223
-Connection #: 43, NodeIn: 1, NodeOut: 14
-Weight: -6.035656020610162
-Connection #: 44, NodeIn: 11, NodeOut: 14
-Weight: -3.214081293821458
-Connection #: 45, NodeIn: 14, NodeOut: 10
-Weight: 0.9026278705591286
-Connection #: 46, NodeIn: 6, NodeOut: 9
-Weight: 1.9805952607495318
-Connection #: 47, NodeIn: 13, NodeOut: 15
-Weight: -2.686667509384203
-Connection #: 48, NodeIn: 1, NodeOut: 15
-Weight: 0.6724382548853853
-Connection #: 49, NodeIn: 15, NodeOut: 9
-Weight: -0.9038405519929287
-Connection #: 50, NodeIn: 10, NodeOut: 9
-Weight: -0.42345250071236534
-Connection #: 51, NodeIn: 7, NodeOut: 3
-Weight: -4.124790134141243e-05
-Connection #: 52, NodeIn: 5, NodeOut: 15
-Weight: 1.9322353524301694
-Connection #: 53, NodeIn: 2, NodeOut: 15
-Weight: -2.0192406484533953
-Connection #: 54, NodeIn: 1, NodeOut: 16
-Weight: -2.0112987655234438
-Connection #: 55, NodeIn: 12, NodeOut: 16
-Weight: -0.2507876854594477
-Connection #: 56, NodeIn: 16, NodeOut: 15
-Weight: -3.4187769511166377
-Connection #: 57, NodeIn: 12, NodeOut: 15
-Weight: -0.6099437901969245
-Connection #: 58, NodeIn: 4, NodeOut: 13
-Weight: -2.836594594745722
-Connection #: 59, NodeIn: 15, NodeOut: 17
-Weight: -4.903037916819141
-Connection #: 60, NodeIn: 13, NodeOut: 17
-Weight: -4.268090757530033
-Connection #: 61, NodeIn: 17, NodeOut: 3
-Weight: -1.605270584578083
-Connection #: 62, NodeIn: 8, NodeOut: 18
-Weight: 3.128504090558458
-Connection #: 63, NodeIn: 1, NodeOut: 18
-Weight: -3.7464591260805253
-Connection #: 64, NodeIn: 18, NodeOut: 3
-Weight: 4.449887994088227
-Connection #: 65, NodeIn: 16, NodeOut: 3
-Weight: 3.5553079628771
-Connection #: 66, NodeIn: 14, NodeOut: 18
-Weight: -0.1674260627852867
-Connection #: 67, NodeIn: 2, NodeOut: 19
-Weight: 2.6815151072667045
-Connection #: 68, NodeIn: 1, NodeOut: 19
-Weight: -0.8262399370195398
-Connection #: 69, NodeIn: 19, NodeOut: 6
-Weight: -0.40294595867465705
-Connection #: 70, NodeIn: 4, NodeOut: 19
-Weight: 4.01530543105843
-Connection #: 71, NodeIn: 0, NodeOut: 12
-Weight: -0.7551796576488976
-Connection #: 72, NodeIn: 13, NodeOut: 3
-Weight: 0.8118084178592798
-Connection #: 73, NodeIn: 1, NodeOut: 20
-Weight: -2.0367028880580196
-Connection #: 74, NodeIn: 8, NodeOut: 20
-Weight: 1.8057621964907897
-Connection #: 75, NodeIn: 20, NodeOut: 3
-Weight: -1.72604597611348
-Connection #: 76, NodeIn: 0, NodeOut: 18
-Weight: -2.91549002866255
-Connection #: 77, NodeIn: 16, NodeOut: 21
-Weight: -1.9747759675047303
-Connection #: 78, NodeIn: 19, NodeOut: 21
-Weight: -1.062687870377891
-Connection #: 79, NodeIn: 21, NodeOut: 3
-Weight: 1.6568948129433596
-Connection #: 80, NodeIn: 16, NodeOut: 10
-Weight: 0.031084617459896907
-Connection #: 81, NodeIn: 17, NodeOut: 20
-Weight: -3.3882789231948536
-Connection #: 82, NodeIn: 4, NodeOut: 22
-Weight: -2.4104569437184593
-Connection #: 83, NodeIn: 7, NodeOut: 22
-Weight: -2.5348179856495423
-Connection #: 84, NodeIn: 22, NodeOut: 3
-Weight: -1.9138993638775506
-Connection #: 85, NodeIn: 4, NodeOut: 23
-Weight: 2.5369656405452083
-Connection #: 86, NodeIn: 19, NodeOut: 23
-Weight: -2.3955125553647143
-Connection #: 87, NodeIn: 23, NodeOut: 3
-Weight: -1.6761170131923722
-Connection #: 88, NodeIn: 16, NodeOut: 24
-Weight: 1.0996317599622196
-Connection #: 89, NodeIn: 2, NodeOut: 24
-Weight: -0.6184700332391578
-Connection #: 90, NodeIn: 24, NodeOut: 9
-Weight: 0.8924082931540939
-Connection #: 91, NodeIn: 8, NodeOut: 25
-Weight: -2.67707381045645
-Connection #: 92, NodeIn: 5, NodeOut: 25
-Weight: -0.40135367974503433
-Connection #: 93, NodeIn: 25, NodeOut: 20
-Weight: 0.14942912813498416
-Connection #: 94, NodeIn: 14, NodeOut: 26
-Weight: 0.6358033466558973
-Connection #: 95, NodeIn: 16, NodeOut: 26
-Weight: -2.615815730528916
-Connection #: 96, NodeIn: 26, NodeOut: 20
-Weight: 0.8441953331983794
-Connection #: 97, NodeIn: 12, NodeOut: 3
-Weight: -0.34001480616855745
-Connection #: 98, NodeIn: 10, NodeOut: 22
-Weight: 1.867499943265309
-Connection #: 99, NodeIn: 11, NodeOut: 27
-Weight: -1.0551302938258493
-Connection #: 100, NodeIn: 7, NodeOut: 27
-Weight: 0.9828685284909764
-Connection #: 101, NodeIn: 27, NodeOut: 3
-Weight: -2.5891920196268075
-Connection #: 102, NodeIn: 9, NodeOut: 20
-Weight: -2.12032354977523
-Connection #: 103, NodeIn: 16, NodeOut: 28
-Weight: -2.2349296362745097
-Connection #: 104, NodeIn: 13, NodeOut: 28
-Weight: 0.19089492151800028
-Connection #: 105, NodeIn: 28, NodeOut: 3
-Weight: -0.24345643493661828
-Connection #: 106, NodeIn: 13, NodeOut: 29
-Weight: -2.8302966400581004
-Connection #: 107, NodeIn: 2, NodeOut: 29
-Weight: -1.014451116002358
-Connection #: 108, NodeIn: 29, NodeOut: 28
-Weight: -0.7358822451128192
-Connection #: 109, NodeIn: 24, NodeOut: 30
-Weight: -1.7498987534229888
-Connection #: 110, NodeIn: 19, NodeOut: 30
-Weight: 0.1508932567805512
-Connection #: 111, NodeIn: 30, NodeOut: 28
-Weight: 2.108796444187923
-Connection #: 112, NodeIn: 7, NodeOut: 25
-Weight: -0.3336677349214784
-Connection #: 113, NodeIn: 1, NodeOut: 30
-Weight: 1.196639298445261
-Connection #: 114, NodeIn: 26, NodeOut: 22
-Weight: 0.14181938848495815
-Connection #: 115, NodeIn: 4, NodeOut: 25
-Weight: -0.6958185517789675
-Connection #: 116, NodeIn: 6, NodeOut: 31
-Weight: -1.2719973071746276
-Connection #: 117, NodeIn: 19, NodeOut: 31
-Weight: -0.7514935447962303
-Connection #: 118, NodeIn: 31, NodeOut: 3
-Weight: 1.8133838903618278
-Connection #: 119, NodeIn: 5, NodeOut: 32
-Weight: 3.647658961756479
-Connection #: 120, NodeIn: 9, NodeOut: 32
-Weight: 1.056481635590474
-Connection #: 121, NodeIn: 32, NodeOut: 23
-Weight: 0.23909396472726963
-Connection #: 122, NodeIn: 11, NodeOut: 6
-Weight: -2.1539940140315226
-Connection #: 123, NodeIn: 31, NodeOut: 30
-Weight: 0.920605513276615
-Connection #: 124, NodeIn: 14, NodeOut: 33
-Weight: 1.0176786521775842
-Connection #: 125, NodeIn: 13, NodeOut: 33
-Weight: -1.354863178599541
-Connection #: 126, NodeIn: 33, NodeOut: 20
-Weight: 0.27632259247051283
-Connection #: 127, NodeIn: 33, NodeOut: 25
-Weight: -0.8912258727298532
-Connection #: 128, NodeIn: 14, NodeOut: 34
-Weight: -0.6647242897177423
-Connection #: 129, NodeIn: 2, NodeOut: 34
-Weight: -3.399642195614415
-Connection #: 130, NodeIn: 34, NodeOut: 3
-Weight: -0.12078385568739208
-Connection #: 131, NodeIn: 4, NodeOut: 33
-Weight: 0.26007290780468223
-Connection #: 132, NodeIn: 12, NodeOut: 19
-Weight: -2.204062099480358
-Connection #: 133, NodeIn: 5, NodeOut: 20
-Weight: -1.7997822400876256
-Connection #: 134, NodeIn: 16, NodeOut: 33
-Weight: -2.4559978337001342
-Connection #: 135, NodeIn: 4, NodeOut: 35
-Weight: 0.7827070696973829
-Connection #: 136, NodeIn: 11, NodeOut: 35
-Weight: 1.934292792283951
-Connection #: 137, NodeIn: 35, NodeOut: 32
-Weight: -0.00042395344025952797
-Connection #: 138, NodeIn: 14, NodeOut: 36
-Weight: 2.2768734734497547
-Connection #: 139, NodeIn: 8, NodeOut: 36
-Weight: -2.1954361829100475
-Connection #: 140, NodeIn: 36, NodeOut: 29
-Weight: 2.7498564872485995
-Connection #: 141, NodeIn: 36, NodeOut: 9
-Weight: 1.4717500535799022
-Connection #: 142, NodeIn: 1, NodeOut: 37
-Weight: -3.282757958856597
-Connection #: 143, NodeIn: 6, NodeOut: 37
-Weight: 0.038034083100900534
-Connection #: 144, NodeIn: 37, NodeOut: 20
-Weight: -1.8921619848867925
-Connection #: 145, NodeIn: 13, NodeOut: 30
-Weight: -0.5676489130345308
-Connection #: 146, NodeIn: 0, NodeOut: 38
-Weight: 1.7559948932819782
-Connection #: 147, NodeIn: 1, NodeOut: 38
-Weight: 2.0897855855243437
-Connection #: 148, NodeIn: 38, NodeOut: 29
-Weight: 0.3101343190195416
-Connection #: 149, NodeIn: 7, NodeOut: 18
-Weight: 0.9267913263298426
-Connection #: 150, NodeIn: 36, NodeOut: 39
-Weight: -1.1132095172394492
-Connection #: 151, NodeIn: 18, NodeOut: 39
-Weight: -1.6222938591363505
-Connection #: 152, NodeIn: 39, NodeOut: 3
-Weight: -0.11895713782809486
-Connection #: 153, NodeIn: 33, NodeOut: 29
-Weight: 2.3734549687889506
-Connection #: 154, NodeIn: 4, NodeOut: 40
-Weight: -0.21567288037771914
-Connection #: 155, NodeIn: 34, NodeOut: 40
-Weight: -1.5056485888994933
-Connection #: 156, NodeIn: 40, NodeOut: 28
-Weight: -2.433597430216691
-Connection #: 157, NodeIn: 16, NodeOut: 22
-Weight: -1.9270680406380758
-Connection #: 158, NodeIn: 0, NodeOut: 33
-Weight: -0.49167694387677585
-Connection #: 159, NodeIn: 14, NodeOut: 37
-Weight: -0.8241465525862631
+Weight: -8.171288525328977
+Connection #: 10, NodeIn: 1, NodeOut: 6
+Weight: -3.3533050689822432
+Connection #: 11, NodeIn: 5, NodeOut: 6
+Weight: -3.9434562696953144
+Connection #: 12, NodeIn: 6, NodeOut: 3
+Weight: 4.260293822901983
+Connection #: 13, NodeIn: 0, NodeOut: 7
+Weight: -4.294930443619832
+Connection #: 14, NodeIn: 2, NodeOut: 7
+Weight: 4.5545727366031015
+Connection #: 15, NodeIn: 7, NodeOut: 3
+Weight: 0.946873295364451
+Connection #: 16, NodeIn: 2, NodeOut: 8
+Weight: -3.837508647091279
+Connection #: 17, NodeIn: 1, NodeOut: 8
+Weight: 0.49349934320660765
+Connection #: 18, NodeIn: 8, NodeOut: 3
+Weight: -1.6382932881628025
+Connection #: 19, NodeIn: 8, NodeOut: 9
+Weight: 1.3176929142215261
+Connection #: 20, NodeIn: 7, NodeOut: 9
+Weight: -0.5937977545009003
+Connection #: 21, NodeIn: 9, NodeOut: 3
+Weight: 0.972293425685638
+Connection #: 22, NodeIn: 2, NodeOut: 10
+Weight: 4.9495780453730935
+Connection #: 23, NodeIn: 6, NodeOut: 10
+Weight: -0.782664410304529
+Connection #: 24, NodeIn: 10, NodeOut: 3
+Weight: 5.043064830337365
+Connection #: 25, NodeIn: 0, NodeOut: 11
+Weight: -2.849366769694523
+Connection #: 26, NodeIn: 7, NodeOut: 11
+Weight: 0.7591559959074153
+Connection #: 27, NodeIn: 11, NodeOut: 3
+Weight: -2.2935348529011943
+Connection #: 28, NodeIn: 8, NodeOut: 6
+Weight: 1.16686411827758
+Connection #: 29, NodeIn: 1, NodeOut: 12
+Weight: 2.691931398807501
+Connection #: 30, NodeIn: 0, NodeOut: 12
+Weight: -1.216859149312325
+Connection #: 31, NodeIn: 12, NodeOut: 6
+Weight: -2.633987693522725
+Connection #: 32, NodeIn: 5, NodeOut: 13
+Weight: 3.4201430728431275
+Connection #: 33, NodeIn: 2, NodeOut: 13
+Weight: -1.4744571358061729
+Connection #: 34, NodeIn: 13, NodeOut: 3
+Weight: 1.026817856796077
+Connection #: 35, NodeIn: 1, NodeOut: 14
+Weight: -5.717917917540201
+Connection #: 36, NodeIn: 2, NodeOut: 14
+Weight: -0.8872699656090726
+Connection #: 37, NodeIn: 14, NodeOut: 3
+Weight: 2.5111083239719063
+Connection #: 38, NodeIn: 9, NodeOut: 11
+Weight: 1.815326801429786
+Connection #: 39, NodeIn: 5, NodeOut: 9
+Weight: -0.3554890083193075
+Connection #: 40, NodeIn: 12, NodeOut: 15
+Weight: -1.9034313382692505
+Connection #: 41, NodeIn: 5, NodeOut: 15
+Weight: 1.2582114136311986
+Connection #: 42, NodeIn: 15, NodeOut: 3
+Weight: 0.9283914119119897
+Connection #: 43, NodeIn: 5, NodeOut: 10
+Weight: -6.11059123387295
+Connection #: 44, NodeIn: 10, NodeOut: 14
+Weight: 1.2741690321326022
+Connection #: 45, NodeIn: 10, NodeOut: 16
+Weight: -1.4474159722423185
+Connection #: 46, NodeIn: 6, NodeOut: 16
+Weight: 0.8294488044974585
+Connection #: 47, NodeIn: 16, NodeOut: 3
+Weight: -3.471512559111199
+Connection #: 48, NodeIn: 12, NodeOut: 9
+Weight: 0.49684344604195857
+Connection #: 49, NodeIn: 10, NodeOut: 11
+Weight: -2.18225064895623
+Connection #: 50, NodeIn: 1, NodeOut: 17
+Weight: 0.23473317520431364
+Connection #: 51, NodeIn: 4, NodeOut: 17
+Weight: 3.228515962399001
+Connection #: 52, NodeIn: 17, NodeOut: 6
+Weight: -2.8433233699504705
+Connection #: 53, NodeIn: 8, NodeOut: 11
+Weight: 1.591785906307496
+Connection #: 54, NodeIn: 5, NodeOut: 18
+Weight: 0.46550545147887884
+Connection #: 55, NodeIn: 2, NodeOut: 18
+Weight: 0.000578175898562211
+Connection #: 56, NodeIn: 18, NodeOut: 14
+Weight: 1.1918724366388804
+Connection #: 57, NodeIn: 12, NodeOut: 19
+Weight: -0.4286630648284817
+Connection #: 58, NodeIn: 0, NodeOut: 19
+Weight: -1.627627124632495
+Connection #: 59, NodeIn: 19, NodeOut: 3
+Weight: 2.4575888150102974
+Connection #: 60, NodeIn: 4, NodeOut: 9
+Weight: -1.4235003873895158
+Connection #: 61, NodeIn: 2, NodeOut: 20
+Weight: 1.392103281382623
+Connection #: 62, NodeIn: 13, NodeOut: 20
+Weight: 0.6225331270829804
+Connection #: 63, NodeIn: 20, NodeOut: 16
+Weight: 1.946763774689261
+Connection #: 64, NodeIn: 0, NodeOut: 21
+Weight: -0.5737802793895614
+Connection #: 65, NodeIn: 2, NodeOut: 21
+Weight: -1.3312207792200832
+Connection #: 66, NodeIn: 21, NodeOut: 8
+Weight: -2.029525334252521
+Connection #: 67, NodeIn: 19, NodeOut: 22
+Weight: -2.0409897227542917
+Connection #: 68, NodeIn: 1, NodeOut: 22
+Weight: -1.156901882039554
+Connection #: 69, NodeIn: 22, NodeOut: 3
+Weight: 2.5515316669034998
+Connection #: 70, NodeIn: 8, NodeOut: 23
+Weight: -1.365114681039573
+Connection #: 71, NodeIn: 1, NodeOut: 23
+Weight: -3.69544818656518
+Connection #: 72, NodeIn: 23, NodeOut: 3
+Weight: 3.0204520203752097
+Connection #: 73, NodeIn: 20, NodeOut: 15
+Weight: -0.8477477150951205
+Connection #: 74, NodeIn: 4, NodeOut: 24
+Weight: -2.8352397528637714
+Connection #: 75, NodeIn: 6, NodeOut: 24
+Weight: 0.403616658025872
+Connection #: 76, NodeIn: 24, NodeOut: 23
+Weight: -3.823240202697521
+Connection #: 77, NodeIn: 6, NodeOut: 14
+Weight: -1.4734102802369136
+Connection #: 78, NodeIn: 6, NodeOut: 18
+Weight: 1.1119629088529772
+Connection #: 79, NodeIn: 21, NodeOut: 25
+Weight: -1.046381316291474
+Connection #: 80, NodeIn: 18, NodeOut: 25
+Weight: -0.9600862992450048
+Connection #: 81, NodeIn: 25, NodeOut: 16
+Weight: 1.5889784979365296
+Connection #: 82, NodeIn: 15, NodeOut: 22
+Weight: 1.2896479345438008
+Connection #: 83, NodeIn: 1, NodeOut: 26
+Weight: -0.6797890357411115
+Connection #: 84, NodeIn: 2, NodeOut: 26
+Weight: 0.4386788048230828
+Connection #: 85, NodeIn: 26, NodeOut: 16
+Weight: 2.787412534366247
+Connection #: 86, NodeIn: 19, NodeOut: 16
+Weight: 2.345317456220991
+Connection #: 87, NodeIn: 19, NodeOut: 27
+Weight: -0.44064604018924025
+Connection #: 88, NodeIn: 6, NodeOut: 27
+Weight: -0.6359632615047441
+Connection #: 89, NodeIn: 27, NodeOut: 3
+Weight: -0.6166907757293807
+Connection #: 90, NodeIn: 13, NodeOut: 28
+Weight: 1.2000542922668314
+Connection #: 91, NodeIn: 7, NodeOut: 28
+Weight: -2.2781934725580357
+Connection #: 92, NodeIn: 28, NodeOut: 23
+Weight: 0.36977382789703606
+Connection #: 93, NodeIn: 13, NodeOut: 29
+Weight: 0.46870008282703957
+Connection #: 94, NodeIn: 17, NodeOut: 29
+Weight: -1.1205364458073508
+Connection #: 95, NodeIn: 29, NodeOut: 3
+Weight: 0.3575966469697126
+Connection #: 96, NodeIn: 12, NodeOut: 20
+Weight: -1.7109947445696985
+Connection #: 97, NodeIn: 25, NodeOut: 30
+Weight: -1.0519215086509714
+Connection #: 98, NodeIn: 17, NodeOut: 30
+Weight: -0.5277290373406944
+Connection #: 99, NodeIn: 30, NodeOut: 3
+Weight: -1.0842668398623652
+Connection #: 100, NodeIn: 16, NodeOut: 31
+Weight: 2.046064239378769
+Connection #: 101, NodeIn: 7, NodeOut: 31
+Weight: 2.07607039870883
+Connection #: 102, NodeIn: 31, NodeOut: 29
+Weight: -0.35090760055471176
+Connection #: 103, NodeIn: 9, NodeOut: 32
+Weight: -0.640499789491629
+Connection #: 104, NodeIn: 4, NodeOut: 32
+Weight: -0.743748431279185
+Connection #: 105, NodeIn: 32, NodeOut: 30
+Weight: -0.9338794797190908
+Connection #: 106, NodeIn: 13, NodeOut: 33
+Weight: 0.006318672523514812
+Connection #: 107, NodeIn: 4, NodeOut: 33
+Weight: 1.818557635785835
+Connection #: 108, NodeIn: 33, NodeOut: 31
+Weight: -1.5746748527432326
+Connection #: 109, NodeIn: 12, NodeOut: 27
+Weight: 1.8357671700355103
+Connection #: 110, NodeIn: 11, NodeOut: 22
+Weight: 0.9708896843498719
+Connection #: 111, NodeIn: 26, NodeOut: 34
+Weight: -0.25332054381040403
+Connection #: 112, NodeIn: 12, NodeOut: 34
+Weight: 1.9355088715009288
+Connection #: 113, NodeIn: 34, NodeOut: 22
+Weight: -2.491126284720165
+Connection #: 114, NodeIn: 21, NodeOut: 35
+Weight: -1.769161639123837
+Connection #: 115, NodeIn: 2, NodeOut: 35
+Weight: -0.20180488333213564
+Connection #: 116, NodeIn: 35, NodeOut: 15
+Weight: -1.2628687564253636
+Connection #: 117, NodeIn: 8, NodeOut: 36
+Weight: -1.48456896154309
+Connection #: 118, NodeIn: 0, NodeOut: 36
+Weight: 1.0843891289822358
+Connection #: 119, NodeIn: 36, NodeOut: 3
+Weight: 0.06501884698981264
+Connection #: 120, NodeIn: 25, NodeOut: 29
+Weight: -0.4056174554892683
+Connection #: 121, NodeIn: 22, NodeOut: 29
+Weight: -1.0687917583240927
+Connection #: 122, NodeIn: 0, NodeOut: 37
+Weight: 1.9785223787156174
+Connection #: 123, NodeIn: 2, NodeOut: 37
+Weight: 0.26813948388517755
+Connection #: 124, NodeIn: 37, NodeOut: 12
+Weight: -2.065165227705323
+Connection #: 125, NodeIn: 2, NodeOut: 38
+Weight: -1.6383714575321129
+Connection #: 126, NodeIn: 1, NodeOut: 38
+Weight: 1.446910086025203
+Connection #: 127, NodeIn: 38, NodeOut: 22
+Weight: -2.41015538510578
+Connection #: 128, NodeIn: 16, NodeOut: 39
+Weight: 1.7380760596689904
+Connection #: 129, NodeIn: 26, NodeOut: 39
+Weight: -0.007735736770782042
+Connection #: 130, NodeIn: 39, NodeOut: 3
+Weight: 0.22142573537622862

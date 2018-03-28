@@ -31,6 +31,8 @@ def getPixels(filepath, numX,numY):
 
 	#resizes image to preferred size
 	im = im_tmp.resize(SIZE)
+	im.show()
+	input("Is this the correct image?")
 	
 
 	#im.show()
