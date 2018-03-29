@@ -54,7 +54,7 @@ def getFittestKey(bestInds):
 #calculates the standard deviation of last 20 fitness values
 def getSTDTrailingFitness(trailingFitness):
 	np_trail = np.array(trailingFitness, copy = True)
-gi	return std
+	return std
 
 
 #defined constants and hyperparameters
