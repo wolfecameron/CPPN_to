@@ -54,8 +54,7 @@ def getFittestKey(bestInds):
 #calculates the standard deviation of last 20 fitness values
 def getSTDTrailingFitness(trailingFitness):
 	np_trail = np.array(trailingFitness, copy = True)
-	std = np.std(np_trail)
-	return std
+gi	return std
 
 
 #defined constants and hyperparameters
@@ -64,7 +63,7 @@ NUM_OUTPUTS = 1
 POP_SIZE = 100
 
 #probability crossover, mutatuion, number of generations
-cxpb , mutpb, ngen = .1, .2, 2000
+cxpb , mutpb, ngen = .05, .1, 2000
 
 
 #theshold for how little change signals a structural mutation
@@ -85,7 +84,7 @@ generations = 0 #keeps track of number of generations that have passed
 structChange = False
 
 #gets pixel values from image for fitness evaluation
-pixels = getPixels('./Images/spring6.png', numX, numY)
+pixels = getPixels('./Images/spring13.png', numX, numY)
 pixels_np = np.array(pixels, copy = True)
 
 #assigns fitness for different CPPN structures 
