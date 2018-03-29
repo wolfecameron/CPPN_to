@@ -1,6 +1,6 @@
 import numpy as np
-from scipy.special import expit
-from scipy.signal import gaussian
+#from scipy.special import expit
+#from scipy.signal import gaussian
 #Tkinter
 #This file will contain an extensive list of activation functions, which will then be kept as a property of each node. 
 
@@ -18,7 +18,7 @@ def simpleAct(x):
 
 #sigmoid activation function
 def sig(x):
-    return expit(x)
+    return float(1)/(1+np.exp(-x))
 		
 #ReLU activation function (linear if greater than 0, else 0)
 def relu(x):
