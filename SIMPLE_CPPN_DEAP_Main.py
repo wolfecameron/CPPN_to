@@ -54,6 +54,7 @@ def getFittestKey(bestInds):
 #calculates the standard deviation of last 20 fitness values
 def getSTDTrailingFitness(trailingFitness):
 	np_trail = np.array(trailingFitness, copy = True)
+	std = np.std(np_trail)
 	return std
 
 
@@ -63,7 +64,7 @@ NUM_OUTPUTS = 1
 POP_SIZE = 100
 
 #probability crossover, mutatuion, number of generations
-cxpb , mutpb, ngen = .05, .1, 2
+cxpb , mutpb, ngen = .05, .15, 2000
 
 
 #theshold for how little change signals a structural mutation
@@ -76,7 +77,7 @@ threshold_set = False
 SEL_PRESSURE = .5
 
 #float value refers to how many generations the network can remain stagnant for before needing structural change
-STAG_GENS = 25.0
+STAG_GENS = 40.0
 
 generations = 0 #keeps track of number of generations that have passed 
 

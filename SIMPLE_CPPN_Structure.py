@@ -265,16 +265,21 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 			
 			return self
 
-	#mutates an individual weights in a genotype based on mutpb, returns true if mutation occurs
+	#mutates an individual weights in a genotype based on mutpb, returns true if mutation occurs for any connection
 	def weightMutate(self, mutpb):
-		# the upper limit of this mutation value should be the mutation probability of the evolutationary algorithm
 		mutate = False
+		variance = 1.0
 		for i in self.connectionList:
 			if(random.random() <= mutpb):
-				i.weight += random.uniform(-mutpb, mutpb)
-				self.nodeList[i.nodeOut].updateConnectingNodeWeights(self.nodeList[i.nodeIn], i.weight)
+				# mutate weights based on a normal distribution
 				mutate = True
+				i.weight = getNewWeight(i.weight, variance)
 		return mutate
+
+	# mutates given weight based on a normal distribution
+	# u = current weight, var = 1, picks new value from this normal distribution
+	def getNewWeight(self, weight, var):
+		return np.random.normal(weight,var)
 
 	#mutates the activation function used in an individual node based on mutpb returns true if mutation occurs
 	def activationMutate(self, mutpb):
