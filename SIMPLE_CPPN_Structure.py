@@ -273,7 +273,7 @@ class Genotype:  # Genotype class contains all mutation/evolutionary method/all 
 			if(random.random() <= mutpb):
 				# mutate weights based on a normal distribution
 				mutate = True
-				i.weight = getNewWeight(i.weight, variance)
+				i.weight = self.getNewWeight(i.weight, variance)
 		return mutate
 
 	# mutates given weight based on a normal distribution

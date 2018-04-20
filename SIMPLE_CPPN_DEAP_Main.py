@@ -11,9 +11,9 @@ import matplotlib.pyplot as plt
 #stores the size of the structure/image
 numX = 50
 numY = 50
-MATERIAL_UPPER_BOUND = 0.4 #this can be pretty low because Springs do not take up much material	
-MATERIAL_LOWER_BOUND = 0.05
-MATERIAL_PENALIZATION_FACTOR = 2
+MATERIAL_UPPER_BOUND = 0.5 #this can be pretty low because Springs do not take up much material	
+MATERIAL_LOWER_BOUND = 0.15
+MATERIAL_PENALIZATION_FACTOR = 4
 
 clearInput = True if(input("Would you like to clear contents of csvfile? (y/n)") == 'y') else False
 
@@ -64,7 +64,7 @@ NUM_OUTPUTS = 1
 POP_SIZE = 100
 
 #probability crossover, mutatuion, number of generations
-cxpb , mutpb, ngen = .05, .15, 2000
+cxpb , mutpb, ngen = .1, .15, 1750
 
 
 #theshold for how little change signals a structural mutation
@@ -77,7 +77,7 @@ threshold_set = False
 SEL_PRESSURE = .5
 
 #float value refers to how many generations the network can remain stagnant for before needing structural change
-STAG_GENS = 40.0
+STAG_GENS = 35.0
 
 generations = 0 #keeps track of number of generations that have passed 
 
@@ -85,7 +85,7 @@ generations = 0 #keeps track of number of generations that have passed
 structChange = False
 
 #gets pixel values from image for fitness evaluation
-pixels = getPixels('./Images/spring13.png', numX, numY)
+pixels = getPixels('./Images/spring14.png', numX, numY)
 pixels_np = np.array(pixels, copy = True)
 
 #assigns fitness for different CPPN structures 
@@ -102,7 +102,7 @@ def evalNetwork(g_param, gen):
 
 	diff = np.subtract(pixels_np,outputs_np)
 	
-	diff[diff>=.5] *= 4 #creates greater penalty for missing a pixel contained in the spring
+	#diff[diff>=.5] *= 4 #creates greater penalty for missing a pixel contained in the spring
 
 	diff = np.absolute(diff)
 	fitness = np.sum(diff)
@@ -207,8 +207,8 @@ for g in range(ngen):
 			fitnessTrail.append(genFitness/float(POP_SIZE))
 			if(stagnationCounter >= 60):
 				#increase the threshold slightly
-				STD_THRESHOLD = (a + STD_THRESHOLD)/2
-				print("STD_THRESHOLD WAS INCREASED")
+				STD_THRESHOLD += (np.fabs(a - STD_THRESHOLD))/4
+				print("STD_THRESHOLD WAS INCREASED to " + str(STD_THRESHOLD))
 				stagnationCounter = 0
 			
 
@@ -226,17 +226,7 @@ def printResultsForwardFeed(bestInds):
 
 #print(getFittestKey(bestInds).__str__())
 printResultsForwardFeed(bestInds)	
-'''
-check = 'y'
-for x,y in zip(finalGen,finalInds):
-	if(check == 'y'):
-		graphImage(x, numX, numY)
-		y.graphGenotype()
-		input("Here is the network structure of this individual.")
-		check = input("would you like to keep viewing (y/n)?")
-	else: 
-		break
-'''
+
 print("Here are the best individuals of each structure.")
 check = 'y'
 keys = list(bestInds.keys())
@@ -256,10 +246,12 @@ for i in reversed(keys):
 		#CPPN output and genotype graph are updated in real time as you change features
 		#the tk playground sometimes throws a runtime error when quitting the window on linux, 
 		#try except block included to avoid this issue
-		try:
-			ind.playground(numX,numY)
-		except:
-			print("Whoops, something went wrong in the playground!")
+		play = input("Playground?") 
+		if(play == 'y' or play == 'Y'):
+			try:
+				ind.playground(numX,numY)
+			except:
+				print("Whoops, something went wrong in the playground!")
 
 		check = input("keep viewing? (y/n)")
 	else:
